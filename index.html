@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For You ❤️</title>
+  <meta name="description" content="A tiny Valentine page." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Soft floating hearts layer -->
+  <div class="hearts" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" role="application" aria-label="Love notes">
+      <div class="top">
+        <div class="badge">Valentine</div>
+        <div class="hint" id="progress">1 / 1</div>
+      </div>
+
+      <div class="content">
+        <h1 class="title" id="title">Hey <span id="name">Love</span> ❤️</h1>
+
+        <p class="line" id="line">
+          I made this little page… just for you.
+        </p>
+
+        <p class="sub" id="sub">
+          (Tap anywhere or press Space/Enter)
+        </p>
+      </div>
+
+      <div class="bottom">
+        <button class="btn" id="nextBtn" type="button">
+          Continue →
+        </button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Made with ❤️</span>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
