@@ -1,7 +1,6 @@
 :root{
   --bg1:#0b0610;
   --bg2:#1a0716;
-  --card:#0f0a14cc;
   --stroke:#ff5d8f33;
 
   --text:#ffeaf3;
@@ -39,7 +38,7 @@ body{
 }
 
 .card{
-  width:min(560px, 92vw);
+  width:min(620px, 94vw);
   border:1px solid var(--stroke);
   background: linear-gradient(180deg, #120a1aaa, #0c0712cc);
   border-radius: 22px;
@@ -48,7 +47,7 @@ body{
   overflow:hidden;
 }
 
-.top,.bottom{
+.top{
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -71,18 +70,53 @@ body{
   color: var(--muted);
 }
 
+/* Tabs */
+.tabs{
+  display:flex;
+  gap:8px;
+  padding: 0 12px 10px;
+  overflow:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{ display:none; }
+
+.tab{
+  border:1px solid #ff5d8f2e;
+  background:#120a1a66;
+  color:#ffd6e6cc;
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:12px;
+  white-space:nowrap;
+  cursor:pointer;
+  transition: transform .12s ease, filter .12s ease;
+}
+.tab:active{ transform: scale(.98); }
+.tab.active{
+  background: #ff2f5518;
+  border-color:#ff7aa655;
+  color:#ffeaf3;
+}
+
 .content{
-  padding: 14px 18px 6px 18px;
+  padding: 10px 18px 6px 18px;
   text-align:center;
 }
 
 .title{
-  margin: 10px 0 12px;
+  margin: 10px 0 6px;
   font-size: clamp(22px, 4.4vw, 32px);
   font-weight: 800;
   line-height:1.2;
   letter-spacing:-0.02em;
-  text-shadow: 0 10px 30px rgba(255,77,125,.12);
+}
+
+.dayname{
+  margin: 4px 0 10px;
+  font-size: 13px;
+  color: #ffd6e6cc;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
 
 .line{
@@ -98,35 +132,43 @@ body{
   color: var(--muted);
 }
 
+.bottom{
+  padding:16px 18px;
+}
+
+/* Buttons */
+.nav{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+
 .btn{
-  width:100%;
   border:0;
   cursor:pointer;
   padding: 14px 16px;
   border-radius: 16px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   color: #0b0610;
   background: linear-gradient(90deg, var(--pink), var(--rose), #ffd1df);
   box-shadow: 0 14px 35px rgba(255,77,125,.22);
-  transition: transform .12s ease, filter .12s ease;
+  transition: transform .12s ease, filter .12s ease, opacity .12s ease;
 }
 .btn:active{ transform: scale(.98); }
 .btn:hover{ filter: brightness(1.04); }
+.btn:disabled{ opacity:.55; cursor:not-allowed; }
 
-.footer{
-  margin-top: 14px;
-  font-size: 12px;
-  color: #ffd6e6aa;
+.btn.ghost{
+  color:#ffeaf3;
+  background: #120a1a66;
+  border:1px solid #ff5d8f33;
+  box-shadow: none;
 }
 
-/* Animations for text swap */
-.fade-out{
-  animation: fadeOut .18s ease forwards;
-}
-.fade-in{
-  animation: fadeIn .30s ease forwards;
-}
+/* Text swap */
+.fade-out{ animation: fadeOut .18s ease forwards; }
+.fade-in{ animation: fadeIn .30s ease forwards; }
 
 @keyframes fadeOut{
   from{ opacity:1; transform: translateY(0); }
@@ -137,7 +179,13 @@ body{
   to{ opacity:1; transform: translateY(0); }
 }
 
-/* Floating hearts layer */
+.footer{
+  margin-top: 14px;
+  font-size: 12px;
+  color: #ffd6e6aa;
+}
+
+/* Floating hearts */
 .hearts{
   position:fixed;
   inset:0;
@@ -164,24 +212,11 @@ body{
   background: currentColor;
   border-radius: 50%;
 }
-.heart{
-  background: currentColor;
-}
+.heart{ background: currentColor; }
 .heart::before{ left:-7px; top:0; }
 .heart::after{ left:0; top:-7px; }
 
 @keyframes floatUp{
   from{ transform: translateY(0) rotate(45deg); }
   to{ transform: translateY(-120vh) rotate(45deg); }
-}
-
-/* Tap anywhere affordance */
-.card{
-  position:relative;
-}
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
 }
