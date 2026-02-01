@@ -96,7 +96,7 @@ body.theme-valentine { --bgA:#07040a; --bgB:#1a0612; --accent:#ff2f55; --accent2
 }
 
 .headline{
-  margin: 44px 0 10px;
+  margin: 34px 0 10px;
   font-size: clamp(28px, 5vw, 54px);
   font-weight: 950;
   letter-spacing:-0.03em;
@@ -104,7 +104,7 @@ body.theme-valentine { --bgA:#07040a; --bgB:#1a0612; --accent:#ff2f55; --accent2
 }
 
 .subtitle{
-  margin: 0 0 22px;
+  margin: 0 0 14px;
   font-size: 13px;
   letter-spacing:.18em;
   text-transform:uppercase;
@@ -132,6 +132,8 @@ body.theme-valentine { --bgA:#07040a; --bgB:#1a0612; --accent:#ff2f55; --accent2
   margin-top: 26px;
   display:flex;
   justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
   position:relative;
 }
 .btn{
@@ -149,6 +151,14 @@ body.theme-valentine { --bgA:#07040a; --bgB:#1a0612; --accent:#ff2f55; --accent2
 }
 .btn:hover{ filter: brightness(1.03); }
 .btn:active{ transform: scale(.98); }
+.btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+.btn.ghost{
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
+}
 
 /* Fade transition */
 body.fade-in{
@@ -190,4 +200,21 @@ body.fade-out{
 @keyframes floatUp{
   from{ transform: translateY(0) rotate(45deg); }
   to{ transform: translateY(-120vh) rotate(45deg); }
+}
+
+/* ✅ Cute cartoon bear media */
+.bear{
+  width: min(280px, 72vw);
+  max-height: 240px;
+  object-fit: contain;
+  display:block;
+  margin: 14px auto 10px;
+
+  animation: bearPop .35s ease-out;
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,.18));
+}
+@keyframes bearPop{
+  0%{ transform: scale(.86) translateY(10px); opacity:0; }
+  60%{ transform: scale(1.05) translateY(-2px); opacity:1; }
+  100%{ transform: scale(1) translateY(0); }
 }
