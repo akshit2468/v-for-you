@@ -42,7 +42,11 @@ function next(){
     setLine(lines[i]);
 
     const nextUrl = document.body.getAttribute("data-next");
-    if (i === lines.length - 1 && nextUrl) nextBtn.textContent = "Next day →";
+    const customLabel = document.body.getAttribute("data-next-label");
+
+    if (i === lines.length - 1 && nextUrl){
+      nextBtn.textContent = customLabel || "Next day →";
+    }
     return;
   }
 
@@ -60,7 +64,6 @@ document.addEventListener("click", (e) => {
   const bear = document.querySelector(".bear");
   if (bear){
     bear.style.animation = "none";
-    // force reflow
     void bear.offsetHeight;
     bear.style.animation = "bearPop .35s ease-out";
   }
@@ -72,10 +75,9 @@ document.addEventListener("keydown", (e) => {
   if (e.key === " " || e.key === "Enter" || e.key === "ArrowRight") next();
 });
 
-// page fade in
 document.body.classList.add("fade-in");
 
-// hearts (theme aware)
+// hearts
 const heartsLayer = document.querySelector(".hearts");
 function spawnHeart(){
   if (!heartsLayer) return;
