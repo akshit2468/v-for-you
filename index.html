@@ -6,40 +6,35 @@
   <title>Valentine Week ❤️</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
-<body>
+<body class="theme-rose fade-in">
   <div class="bg" aria-hidden="true">
-    <div class="glow g1"></div>
-    <div class="glow g2"></div>
-    <div class="glow g3"></div>
+    <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
   </div>
-
   <div class="hearts" aria-hidden="true"></div>
 
-  <main class="stage" id="stage">
-    <header class="topbar">
-      <div class="tag" id="badge">Valentine Week</div>
-      <div class="count" id="progress">Day 1 / 8</div>
-    </header>
+  <main class="stage">
+    <section class="screen">
+      <div class="topline">
+        <div class="tag">Valentine Week</div>
+        <div class="daycount">Loading…</div>
+      </div>
 
-    <nav class="tabs" id="tabs" aria-label="Days navigation"></nav>
+      <h1 class="headline">Just a second… ❤️</h1>
+      <p class="line">Taking you to the first day.</p>
 
-    <section class="panel" id="panel" aria-label="Valentine notes">
-      <h1 class="headline" id="title">Hey <span id="name">Love</span> ❤️</h1>
-      <div class="dayname" id="dayname">Rose Day</div>
-
-      <p class="line" id="line">Tap continue to start.</p>
-      <p class="sub" id="sub">(Tap anywhere / Space / Enter)</p>
-
-      <div class="nav">
-        <button class="btn ghost" id="prevBtn" type="button">← Back</button>
-        <button class="btn" id="nextBtn" type="button">Continue →</button>
+      <div class="actions">
+        <button class="btn" id="nextBtn" type="button">Start →</button>
       </div>
     </section>
-
-    <footer class="footer">Made with ❤️</footer>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      document.body.classList.add("fade-out");
+      setTimeout(()=> location.href="rose.html", 260);
+    });
+    // auto start after 0.6s
+    setTimeout(()=> document.getElementById("nextBtn").click(), 600);
+  </script>
 </body>
 </html>
