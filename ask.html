@@ -1,53 +1,163 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>For You ❤️</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Important Question 😌</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 
 <body class="theme-valentine fade-in">
-  <!-- Background -->
   <div class="bg" aria-hidden="true">
-    <div class="glow g1"></div>
-    <div class="glow g2"></div>
-    <div class="glow g3"></div>
+    <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
   </div>
-
   <div class="hearts" aria-hidden="true"></div>
 
   <main class="stage">
     <section class="screen">
       <div class="topline">
-        <div class="tag">Just a moment…</div>
-        <div class="daycount">❤️</div>
+        <div class="tag">Incoming Question</div>
+        <div class="daycount">0 / 8</div>
       </div>
 
-      <h1 class="headline">Hey you 👀</h1>
-      <p class="line">I made something for you.</p>
-      <p class="hint">Don’t rush… it’s worth it.</p>
+      <h1 class="headline">Hey <span id="name">Love</span> ❤️</h1>
+      <div class="subtitle">Important 😭</div>
 
-      <div class="actions">
-        <button class="btn" id="startBtn" type="button">
+      <p class="line" id="line">Okay… before we start Valentine Week 😌</p>
+      <p class="hint" id="hint">(Tap Continue)</p>
+
+      <div class="actions" style="gap:12px; flex-wrap:wrap;">
+        <button class="btn" id="continueBtn" type="button" style="min-width:min(360px,90%);">
           Continue →
         </button>
       </div>
+
+      <div class="actions" id="choiceRow" style="display:none; gap:12px; flex-wrap:wrap;">
+        <button class="btn" id="yesBtn" type="button" style="min-width:min(360px,90%);">
+          Yes 😌❤️
+        </button>
+
+        <button class="btn" id="noBtn" type="button"
+          style="min-width:min(360px,90%); background:rgba(255,255,255,.08); color:var(--text); border:1px solid rgba(255,255,255,.14); box-shadow:none;">
+          No 🙄
+        </button>
+      </div>
+
+      <p class="hint" id="noHint" style="display:none; margin-top:14px;">
+        (Choose wisely. I’m sensitive. 🙂)
+      </p>
     </section>
   </main>
 
   <script>
-    const goNext = () => {
-      document.body.classList.add("fade-out");
+    // ✅ Edit name here (optional). Or leave "Love"
+    const herName = "Your Girl";
+    document.getElementById("name").textContent = herName;
+
+    // Story lines for ask page
+    const askLines = [
+      "Okay… before we start Valentine Week 😌",
+      "I have one very serious question.",
+      "Like… government-level serious.",
+      "Will you be my Valentine? ❤️"
+    ];
+
+    const lineEl = document.getElementById("line");
+    const hintEl = document.getElementById("hint");
+    const contBtn = document.getElementById("continueBtn");
+    const choiceRow = document.getElementById("choiceRow");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const noHint = document.getElementById("noHint");
+
+    let idx = 0;
+    let navigating = false;
+
+    function setLine(t){
+      lineEl.style.opacity = "0";
+      lineEl.style.transform = "translateY(8px)";
       setTimeout(() => {
-        window.location.href = "ask.html";
-      }, 260);
-    };
+        lineEl.textContent = t;
+        lineEl.style.transition = "opacity .28s ease, transform .28s ease";
+        lineEl.style.opacity = "1";
+        lineEl.style.transform = "translateY(0)";
+      }, 120);
+    }
 
-    document.getElementById("startBtn").addEventListener("click", goNext);
+    contBtn.addEventListener("click", () => {
+      idx++;
+      if (idx < askLines.length) {
+        setLine(askLines[idx]);
+      }
+      if (idx === askLines.length - 1) {
+        // show Yes/No once question is displayed
+        contBtn.style.display = "none";
+        hintEl.style.display = "none";
+        choiceRow.style.display = "flex";
+        noHint.style.display = "block";
+      }
+    });
 
-    // Auto continue after a short pause (feels cinematic)
-    setTimeout(goNext, 900);
+    // Funny NO behavior
+    let noCount = 0;
+    function moveNoButton(){
+      const x = (Math.random() * 80) - 40;
+      const y = (Math.random() * 30) - 15;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+      moveNoButton();
+      const jokes = [
+        "No? 😭 okay wait… try again.",
+        "Button said: ‘nah’ and ran away 🏃‍♂️💨",
+        "Bro that’s illegal. Click Yes.",
+        "Okay fine… but I’m still cute so…",
+        "At this point the No button is just cardio."
+      ];
+      noHint.textContent = jokes[Math.min(noCount - 1, jokes.length - 1)];
+
+      if (noCount >= 5) {
+        noHint.textContent = "Okay. I removed the No option emotionally. 🙂❤️";
+        noBtn.disabled = true;
+        noBtn.style.opacity = "0.45";
+      }
+    });
+
+    // YES → go to Rose Day with fade (and prevent double triggers)
+    yesBtn.addEventListener("click", () => {
+      if (navigating) return;
+      navigating = true;
+      document.body.classList.add("fade-out");
+      setTimeout(() => location.href = "rose.html", 260);
+    });
+
+    // Hearts (same effect, without script.js)
+    const heartsLayer = document.querySelector(".hearts");
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = `${Math.random() * 100}vw`;
+
+      const size = 10 + Math.random() * 16;
+      h.style.width = `${size}px`;
+      h.style.height = `${size}px`;
+
+      const styles = getComputedStyle(document.body);
+      const c1 = styles.getPropertyValue("--accent").trim() || "#ff4d7d";
+      const c2 = styles.getPropertyValue("--accent2").trim() || "#ff7aa6";
+      const colors = [c1, c2, "#ffd1df", "#ffffff"];
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+      const duration = 6 + Math.random() * 6;
+      h.style.animationDuration = `${duration}s`;
+      h.style.opacity = (0.22 + Math.random() * 0.55).toFixed(2);
+
+      heartsLayer.appendChild(h);
+      setTimeout(() => h.remove(), duration * 1000);
+    }
+    setInterval(spawnHeart, 420);
   </script>
 </body>
 </html>
