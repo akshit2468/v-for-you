@@ -24,13 +24,11 @@
       </div>
 
       <h1 class="headline">Hey you 👀</h1>
-      <p class="line">I have something to ask you.</p>
-      <p class="hint">Promise you won’t run?</p>
+      <p class="line">I made something for you.</p>
+      <p class="hint">Tap to continue.</p>
 
       <div class="actions">
-        <button class="btn" id="startBtn" type="button">
-          Okay → 
-        </button>
+        <button class="btn" id="startBtn" type="button">Okay →</button>
       </div>
     </section>
   </main>
@@ -38,9 +36,7 @@
   <script>
     document.getElementById("startBtn").addEventListener("click", () => {
       document.body.classList.add("fade-out");
-      setTimeout(() => {
-        window.location.href = "ask.html";
-      }, 300);
+      setTimeout(() => { location.href = "ask.html"; }, 300);
     });
   </script>
 </body>
