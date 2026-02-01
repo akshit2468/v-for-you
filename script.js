@@ -2,14 +2,9 @@
 const herName = "Your Girl"; // change name here
 // =======================
 
-// Each page has its own lines set in HTML via data-lines=""
 function getLines() {
-  const raw = document.body.getAttribute("data-lines") || "";
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return ["(Lines JSON is invalid in this page.)"];
-  }
+  const raw = document.body.getAttribute("data-lines") || "[]";
+  try { return JSON.parse(raw); } catch { return ["(Lines JSON is invalid.)"]; }
 }
 
 const lines = getLines();
@@ -23,7 +18,6 @@ const hintEl = document.getElementById("hint");
 const nextBtn = document.getElementById("nextBtn");
 
 function setLine(text) {
-  // simple fade for line
   lineEl.style.opacity = "0";
   lineEl.style.transform = "translateY(8px)";
   setTimeout(() => {
@@ -47,11 +41,8 @@ function next(){
   if (i < lines.length){
     setLine(lines[i]);
 
-    // if this is last line, button becomes Next Day / Finish (based on data-next)
     const nextUrl = document.body.getAttribute("data-next");
-    if (i === lines.length - 1 && nextUrl){
-      nextBtn.textContent = "Next day →";
-    }
+    if (i === lines.length - 1 && nextUrl) nextBtn.textContent = "Next day →";
     return;
   }
 
@@ -59,12 +50,21 @@ function next(){
   if (nextUrl) go(nextUrl);
 }
 
-// click on button / anywhere
 if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); next(); });
 
 document.addEventListener("click", (e) => {
-  // ignore clicks on links if any
   if (e.target.closest("a")) return;
+  if (e.target.closest("button")) return;
+
+  // bounce bear again on each tap (cute)
+  const bear = document.querySelector(".bear");
+  if (bear){
+    bear.style.animation = "none";
+    // force reflow
+    void bear.offsetHeight;
+    bear.style.animation = "bearPop .35s ease-out";
+  }
+
   next();
 });
 
