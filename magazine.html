@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Our Little Magazine ❤️</title>
+
+  <style>
+    :root{
+      --paper:#f7f1ea;
+      --ink:#2b1f22;
+      --shadow: 0 30px 90px rgba(0,0,0,.45);
+      --accent:#ff3d6e;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      background:
+        radial-gradient(900px 500px at 30% 10%, rgba(255,61,110,.18), transparent 60%),
+        radial-gradient(700px 500px at 80% 40%, rgba(255,255,255,.12), transparent 60%),
+        linear-gradient(180deg, #05040a, #1a0612);
+      color:#fff;
+      overflow:hidden;
+    }
+
+    .wrap{
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+
+    .topbar{
+      position:fixed;
+      left:0; right:0; top:0;
+      padding:14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:5;
+      pointer-events:none;
+    }
+    .pill{
+      pointer-events:auto;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(10px);
+    }
+    .pill a{ color:#fff; text-decoration:none; }
+
+    .book{
+      width:min(980px, 96vw);
+      height:min(640px, 82vh);
+      position:relative;
+      perspective: 1800px;
+    }
+
+    .sheet{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+      transition: transform .8s cubic-bezier(.2,.9,.2,1);
+    }
+
+    .page{
+      position:absolute;
+      inset:0;
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backface-visibility:hidden;
+      overflow:hidden;
+    }
+    .page.back{
+      transform: rotateY(180deg);
+    }
+
+    /* Paper texture + margins */
+    .paper{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 500px at 20% 0%, rgba(255,61,110,.08), transparent 60%),
+        radial-gradient(600px 400px at 90% 30%, rgba(0,0,0,.06), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,0));
+      opacity:.9;
+      pointer-events:none;
+    }
+
+    .content{
+      position:relative;
+      height:100%;
+      padding:32px 26px;
+      color: var(--ink);
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+    }
+
+    .cover .content{
+      grid-template-columns: 1.05fr .95fr;
+      align-items:stretch;
+    }
+
+    .title{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-size: clamp(28px, 4.5vw, 52px);
+      margin: 8px 0 10px;
+    }
+    .small{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: rgba(43,31,34,.75);
+      font-size: 13px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      padding:16px;
+      box-shadow: 0 14px 26px rgba(0,0,0,.12);
+    }
+
+    .polaroids{
+      background: #6e0f25;
+      border-radius: 16px;
+      padding: 16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .polaroids::after{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(700px 300px at 20% 0%, rgba(255,255,255,.08), transparent 60%);
+      pointer-events:none;
+    }
+    .polaroid{
+      background:#fff;
+      border-radius: 10px;
+      padding: 10px 10px 16px;
+      width: 74%;
+      box-shadow: 0 18px 30px rgba(0,0,0,.25);
+      transform: rotate(-4deg);
+      margin-bottom: 14px;
+      position:relative;
+    }
+    .polaroid:nth-child(2){
+      width: 66%;
+      transform: rotate(5deg);
+      margin-left: 18%;
+    }
+    .photo{
+      width:100%;
+      height: 220px;
+      border-radius:8px;
+      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+      display:grid;
+      place-items:center;
+      font-family: ui-sans-serif, system-ui;
+      color: rgba(43,31,34,.55);
+      font-size: 13px;
+      overflow:hidden;
+    }
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .wax{
+      position:absolute;
+      left: 14px;
+      bottom: 14px;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.25), transparent 35%),
+                  radial-gradient(circle at 55% 60%, rgba(0,0,0,.18), transparent 50%),
+                  var(--accent);
+      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+    }
+
+    .lovebox{
+      border-radius: 18px;
+      border: 2px solid rgba(110,15,37,.25);
+      padding: 18px;
+      background:
+        radial-gradient(900px 600px at 10% 0%, rgba(255,61,110,.10), transparent 55%),
+        #fff;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      text-align:center;
+    }
+    .lovebox .big{
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight:900;
+      color:#6e0f25;
+      margin:0 0 10px;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+    .lovebox .script{
+      font-family: "Brush Script MT", "Apple Chancery", cursive;
+      font-size: clamp(34px, 6vw, 64px);
+      color:#6e0f25;
+      margin: 0;
+      line-height:1;
+    }
+
+    .note{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: rgba(43,31,34,.85);
+      font-size: 15px;
+      line-height:1.7;
+    }
+
+    .controls{
+      position:fixed;
+      left:0; right:0; bottom:16px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      z-index:6;
+    }
+    .btn{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      border:0;
+      cursor:pointer;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight:900;
+      color:#0b0610;
+      background: linear-gradient(90deg, #ff3d6e, #ffd1df);
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Flip state */
+    .flipped{ transform: rotateY(-180deg); }
+
+    /* Mobile stack */
+    @media (max-width: 860px){
+      .content{ grid-template-columns: 1fr; }
+      .photo{ height: 200px; }
+      .polaroid{ width: 92%; }
+      .polaroid:nth-child(2){ width: 86%; margin-left: 10%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="pill">Our Magazine</div>
+    <div class="pill"><a href="valentine.html">← back</a></div>
+  </div>
+
+  <div class="wrap">
+    <div class="book" id="book">
+
+      <!-- SHEET 1 (Cover + Inside) -->
+      <div class="sheet" data-sheet="0" style="z-index:5;">
+        <!-- front -->
+        <section class="page cover">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="polaroids">
+              <div class="polaroid">
+                <div class="photo">
+                  <!-- Replace with your photo -->
+                  <!-- <img src="assets/photos/p1.jpg" alt="us"> -->
+                  Drop a photo here (optional)
+                </div>
+              </div>
+              <div class="polaroid">
+                <div class="photo">
+                  <!-- <img src="assets/photos/p2.jpg" alt="us"> -->
+                  Another photo here (optional)
+                </div>
+              </div>
+              <div class="wax" aria-hidden="true"></div>
+            </div>
+
+            <div class="lovebox">
+              <div class="small">TO MY DEAREST</div>
+              <p class="script">Love</p>
+              <p class="big">Will you be my Valentine?</p>
+              <p class="note" style="margin:10px 0 0;">
+                (Yes is the correct answer 🙂)
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- back -->
+        <section class="page back">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="card">
+              <div class="small">PAGE 1</div>
+              <div class="title" style="font-size:34px;">Why you’re my favorite person</div>
+              <p class="note">
+                • You make normal days feel special.<br/>
+                • Your smile fixes my mood instantly.<br/>
+                • You’re cute AND annoying (perfect combo).<br/>
+                • I feel safe with you.
+              </p>
+              <p class="note" style="margin-top:10px;">
+                If I could, I’d wrap you up in a hug and keep you forever 🤍
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="small">PHOTO</div>
+              <div class="photo">
+                <!-- <img src="assets/photos/p3.jpg" alt="us"> -->
+                Add one more photo (optional)
+              </div>
+              <p class="note" style="margin-top:12px;">
+                Caption: “us being cute” 😌
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SHEET 2 -->
+      <div class="sheet" data-sheet="1" style="z-index:4;">
+        <section class="page">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="card">
+              <div class="small">PAGE 2</div>
+              <div class="title" style="font-size:34px;">Tiny things I love about you</div>
+              <p class="note">
+                1) The way you talk when you’re excited.<br/>
+                2) How you pretend you’re not soft (but you are).<br/>
+                3) Your laugh. Instant serotonin.<br/>
+                4) Your eyes when you’re happy.
+              </p>
+            </div>
+            <div class="card">
+              <div class="small">MEMORY</div>
+              <p class="note">
+                Write one memory here that only you two understand.
+                <br/><br/>
+                Example: “That one day when ______ and we couldn’t stop laughing.”
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page back">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="card">
+              <div class="small">PAGE 3</div>
+              <div class="title" style="font-size:34px;">My promise</div>
+              <p class="note">
+                I’ll choose you — in the easy days and the messy ones.
+                I’ll listen, I’ll try, I’ll show up.
+              </p>
+              <p class="note">
+                And whenever you feel low, I’ll remind you: you’re loved. A lot.
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="small">PHOTO</div>
+              <div class="photo">
+                <!-- <img src="assets/photos/p4.jpg" alt="us"> -->
+                Optional photo slot
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SHEET 3 -->
+      <div class="sheet" data-sheet="2" style="z-index:3;">
+        <section class="page">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="card">
+              <div class="small">PAGE 4</div>
+              <div class="title" style="font-size:34px;">Reasons you can’t say no</div>
+              <p class="note">
+                • I’m cute.<br/>
+                • I made a whole website.<br/>
+                • This is basically effort + love.<br/>
+                • And you like me. (Don’t lie.)
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="small">FINAL NOTE</div>
+              <p class="note">
+                If you’re smiling right now, my mission is complete.
+                <br/><br/>
+                Happy Valentine’s Day ❤️
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page back">
+          <div class="paper"></div>
+          <div class="content">
+            <div class="card" style="grid-column:1/-1; text-align:center;">
+              <div class="small">THE END</div>
+              <div class="title">So… will you be my Valentine?</div>
+              <p class="note">
+                (Say yes and I’ll act normal. For 5 minutes.)
+              </p>
+              <div style="margin-top:18px;">
+                <button class="btn" id="yesFinal" type="button">Yes 😌❤️</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn ghost" id="prevBtn" type="button">← Prev</button>
+    <button class="btn" id="nextBtn" type="button">Next →</button>
+  </div>
+
+  <script>
+    const sheets = Array.from(document.querySelectorAll(".sheet"));
+    let page = 0; // 0..(sheets.length*2 - 1)
+    const totalPages = sheets.length * 2;
+
+    function render(){
+      // Each sheet holds 2 pages: front (even), back (odd) while flipped.
+      // When page >= (sheetIndex*2 + 2) => that sheet is flipped.
+      sheets.forEach((s, idx) => {
+        const threshold = (idx + 1) * 2;
+        s.classList.toggle("flipped", page >= threshold);
+      });
+      document.getElementById("prevBtn").disabled = page === 0;
+      document.getElementById("nextBtn").disabled = page === totalPages - 1;
+    }
+
+    function next(){
+      if (page < totalPages - 1){ page++; render(); }
+    }
+    function prev(){
+      if (page > 0){ page--; render(); }
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.getElementById("prevBtn").addEventListener("click", prev);
+
+    // Tap right/left side to flip (feels like the reel)
+    document.getElementById("book").addEventListener("click", (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      if (x > rect.width/2) next();
+      else prev();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") next();
+      if (e.key === "ArrowLeft") prev();
+    });
+
+    document.getElementById("yesFinal").addEventListener("click", () => {
+      alert("Correct answer 😌❤️");
+    });
+
+    render();
+  </script>
+</body>
+</html>
