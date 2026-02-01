@@ -8,7 +8,6 @@
 </head>
 
 <body class="theme-valentine fade-in">
-  <!-- Background -->
   <div class="bg" aria-hidden="true">
     <div class="glow g1"></div>
     <div class="glow g2"></div>
@@ -20,34 +19,29 @@
   <main class="stage">
     <section class="screen">
       <div class="topline">
-        <div class="tag">Just a moment…</div>
+        <div class="tag">One second…</div>
         <div class="daycount">❤️</div>
       </div>
 
       <h1 class="headline">Hey you 👀</h1>
-      <p class="line">I made something for you.</p>
-      <p class="hint">Don’t rush… it’s worth it.</p>
+      <p class="line">I have something to ask you.</p>
+      <p class="hint">Promise you won’t run?</p>
 
       <div class="actions">
         <button class="btn" id="startBtn" type="button">
-          Continue →
+          Okay → 
         </button>
       </div>
     </section>
   </main>
 
   <script>
-    const goNext = () => {
+    document.getElementById("startBtn").addEventListener("click", () => {
       document.body.classList.add("fade-out");
       setTimeout(() => {
         window.location.href = "ask.html";
-      }, 260);
-    };
-
-    document.getElementById("startBtn").addEventListener("click", goNext);
-
-    // Auto continue after a short pause (feels cinematic)
-    setTimeout(goNext, 900);
+      }, 300);
+    });
   </script>
 </body>
 </html>
