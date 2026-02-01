@@ -21,26 +21,21 @@
       </div>
 
       <h1 class="headline">Hey <span id="name">Love</span> ❤️</h1>
-      <div class="subtitle">Important 😭</div>
+      <div class="subtitle">Don’t panic 😭</div>
+
+      <img class="bear" src="assets/bears/ask.webp" alt="cute bear" />
 
       <p class="line" id="line">Okay… before we start Valentine Week 😌</p>
       <p class="hint" id="hint">(Tap Continue)</p>
 
-      <div class="actions" style="gap:12px; flex-wrap:wrap;">
-        <button class="btn" id="continueBtn" type="button" style="min-width:min(360px,90%);">
-          Continue →
-        </button>
+      <div class="actions" id="continueRow">
+        <button class="btn" id="continueBtn" type="button">Continue →</button>
       </div>
 
-      <div class="actions" id="choiceRow" style="display:none; gap:12px; flex-wrap:wrap;">
-        <button class="btn" id="yesBtn" type="button" style="min-width:min(360px,90%);">
-          Yes 😌❤️
-        </button>
+      <div class="actions" id="choiceRow" style="display:none;">
+        <button class="btn" id="yesBtn" type="button">Yes 😌❤️</button>
 
-        <button class="btn" id="noBtn" type="button"
-          style="min-width:min(360px,90%); background:rgba(255,255,255,.08); color:var(--text); border:1px solid rgba(255,255,255,.14); box-shadow:none;">
-          No 🙄
-        </button>
+        <button class="btn ghost" id="noBtn" type="button">No 🙄</button>
       </div>
 
       <p class="hint" id="noHint" style="display:none; margin-top:14px;">
@@ -50,11 +45,9 @@
   </main>
 
   <script>
-    // ✅ Edit name here (optional). Or leave "Love"
-    const herName = "Your Girl";
+    const herName = "Your Girl"; // change name here too
     document.getElementById("name").textContent = herName;
 
-    // Story lines for ask page
     const askLines = [
       "Okay… before we start Valentine Week 😌",
       "I have one very serious question.",
@@ -65,6 +58,7 @@
     const lineEl = document.getElementById("line");
     const hintEl = document.getElementById("hint");
     const contBtn = document.getElementById("continueBtn");
+    const continueRow = document.getElementById("continueRow");
     const choiceRow = document.getElementById("choiceRow");
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
@@ -86,19 +80,17 @@
 
     contBtn.addEventListener("click", () => {
       idx++;
-      if (idx < askLines.length) {
-        setLine(askLines[idx]);
-      }
+      if (idx < askLines.length) setLine(askLines[idx]);
+
       if (idx === askLines.length - 1) {
-        // show Yes/No once question is displayed
-        contBtn.style.display = "none";
+        continueRow.style.display = "none";
         hintEl.style.display = "none";
         choiceRow.style.display = "flex";
         noHint.style.display = "block";
       }
     });
 
-    // Funny NO behavior
+    // funny NO behavior
     let noCount = 0;
     function moveNoButton(){
       const x = (Math.random() * 80) - 40;
@@ -109,6 +101,7 @@
     noBtn.addEventListener("click", () => {
       noCount++;
       moveNoButton();
+
       const jokes = [
         "No? 😭 okay wait… try again.",
         "Button said: ‘nah’ and ran away 🏃‍♂️💨",
@@ -121,11 +114,9 @@
       if (noCount >= 5) {
         noHint.textContent = "Okay. I removed the No option emotionally. 🙂❤️";
         noBtn.disabled = true;
-        noBtn.style.opacity = "0.45";
       }
     });
 
-    // YES → go to Rose Day with fade (and prevent double triggers)
     yesBtn.addEventListener("click", () => {
       if (navigating) return;
       navigating = true;
@@ -133,7 +124,7 @@
       setTimeout(() => location.href = "rose.html", 260);
     });
 
-    // Hearts (same effect, without script.js)
+    // hearts (same vibe)
     const heartsLayer = document.querySelector(".hearts");
     function spawnHeart(){
       const h = document.createElement("div");
