@@ -1,97 +1,37 @@
-<!doctype html>
-<html lang="en"><head>
+<!doctype html><html><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Teddy Day 🧸</title>
-<link rel="stylesheet" href="days.css"/>
 <style>
-  /* extra teddy vibe - stitched card + cozy */
-  .teddyWrap{
-    position:relative;
-    border-radius:26px;
-    padding:18px;
-    border:2px dashed rgba(255,255,255,.22);
-    background: rgba(0,0,0,.14);
-  }
-  .stitch{
-    position:absolute; inset:10px;
-    border-radius:22px;
-    border:1px dashed rgba(255,255,255,.18);
-    pointer-events:none;
-    opacity:.75;
-  }
-  .cozy{
-    display:grid;
-    gap:10px;
-    margin-top:10px;
-  }
-  .cozy .chip{
-    display:inline-flex;
-    width:fit-content;
-    padding:10px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.07);
-    font-size:12px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    opacity:.9;
-  }
+html,body{height:100%;margin:0}
+body{
+  overflow:hidden;display:grid;place-items:center;
+  font-family:system-ui;color:#fff;
+  background:linear-gradient(180deg,#07121f,#071a2b);
+}
+.fall{position:fixed;inset:0;pointer-events:none}
+.f{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(120vh)}}
+.center{text-align:center}
+h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
+p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
 </style>
 </head>
-
-<body class="theme-teddy" data-stickers="🧸,✨,❤️,🥺,💌,🌙">
-<div class="bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
-<div class="stickers" aria-hidden="true"></div>
-
-<main class="stage">
-  <section class="card">
-    <div class="inner">
-
-      <div>
-        <div class="topline">
-          <div class="pill">Valentine Week</div>
-          <div class="pill">Teddy Day 🧸</div>
-        </div>
-
-        <h1 class="h1">Emergency cuddle kit.</h1>
-        <p class="sub">For when you miss me. Or when the world is annoying.</p>
-
-        <div class="teddyWrap">
-          <div class="stitch"></div>
-          <div class="cozy">
-            <div class="chip">instructions</div>
-            <div class="line">Step 1: hug this page like it’s me.</div>
-            <div class="line">Step 2: take a deep breath.</div>
-            <div class="line">Step 3: remember you’re loved… stupidly much.</div>
-            <div class="line">Step 4: text me “done” so I can smile 😌</div>
-          </div>
-        </div>
-
-        <div class="footer">cozy • soft • yours</div>
-      </div>
-
-      <div class="right">
-        <div class="media">
-          <!-- Optional: if you have a teddy gif/image -->
-          <img class="bear" src="assets/bears/teddy.gif" alt="teddy day" onerror="this.style.display='none'"/>
-          <!-- If image missing, show this instead -->
-          <div class="note" style="text-align:center; margin-top:8px; opacity:.9;">
-            🧸 (If the teddy gif isn’t uploaded yet, this is still cute.)
-          </div>
-        </div>
-
-        <div class="media">
-          <div class="small">tiny note</div>
-          <p class="note">
-            If I could, I’d gift you a teddy that smells like my hoodie.
-            Until then… this page is your portable comfort 🧸❤️
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-</main>
-
-<script src="days.js"></script>
+<body>
+<div class="fall" id="fall"></div>
+<div class="center">
+  <h1>Big hug for you 🧸</h1>
+  <p>Teddy Day vibes</p>
+</div>
+<script>
+const icons=["🧸","💞","✨","🤍"], f=document.getElementById("fall");
+function drop(){
+  const e=document.createElement("div");
+  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=20+Math.random()*26+"px";
+  e.style.animationDuration=7+Math.random()*8+"s";
+  f.appendChild(e); setTimeout(()=>e.remove(),16000);
+}
+setInterval(drop,520);
+</script>
 </body></html>
