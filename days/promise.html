@@ -1,37 +1,31 @@
-<!doctype html><html><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Promise Day 🤞</title>
-<style>
-html,body{height:100%;margin:0}
-body{
-  overflow:hidden;display:grid;place-items:center;
-  font-family:system-ui;color:#fff;
-  background:linear-gradient(180deg,#05080f,#071a18);
-}
-.fall{position:fixed;inset:0;pointer-events:none}
-.f{position:absolute;top:-40px;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(120vh)}}
-.center{text-align:center}
-h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
-p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
-</style>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Promise Day 💍</title>
+  <link rel="stylesheet" href="days.css" />
 </head>
-<body>
-<div class="fall" id="fall"></div>
-<div class="center">
-  <h1>I promise 🤞</h1>
-  <p>Always you</p>
-</div>
-<script>
-const icons=["🤞","✨","❤️","🌿"], f=document.getElementById("fall");
-function drop(){
-  const e=document.createElement("div");
-  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
-  e.style.left=Math.random()*100+"vw";
-  e.style.fontSize=18+Math.random()*26+"px";
-  e.style.animationDuration=7+Math.random()*8+"s";
-  f.appendChild(e); setTimeout(()=>e.remove(),16000);
-}
-setInterval(drop,520);
-</script>
-</body></html>
+<body class="day promise">
+
+  <main class="wrap">
+    <div class="card big">
+      <div class="topline">Promise Day 💍</div>
+
+      <h1 class="title">Pinky promise?</h1>
+      <p class="subtitle">I’ll choose you. Again and again. 🤍</p>
+
+      <div class="hero">
+        <img src="assets/gifs/promise.webp" alt="Promise Day gif" />
+      </div>
+
+      <div class="nav">
+        <button class="btn" data-nav="back">← Back</button>
+        <button class="btn primary" data-nav="next">Next →</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="days.js"></script>
+</body>
+</html>
