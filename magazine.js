@@ -20,8 +20,8 @@ function initFlip(){
   pageFlip = new St.PageFlip(bookEl, {
     width,
     height,
-    size: "stretch",
-    autoSize: true,
+    size: "fixed",
+    autoSize: false,
 
     showCover: true,
 
