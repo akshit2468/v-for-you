@@ -1,611 +1,172 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Our Little Magazine ❤️</title>
-
-  <style>
-    :root{
-      --bg1:#05040a;
-      --bg2:#1a0612;
-      --paper:#f7f1ea;
-      --ink:#2b1f22;
-      --accent:#ff3d6e;
-      --accent2:#ffd1df;
-
-      --shadow: 0 30px 90px rgba(0,0,0,.45);
-      --pageShadow: 0 14px 32px rgba(0,0,0,.18);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      background:
-        radial-gradient(900px 500px at 30% 10%, rgba(255,61,110,.18), transparent 60%),
-        radial-gradient(700px 500px at 80% 40%, rgba(255,255,255,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      color:#fff;
-      overflow:hidden;
-    }
-
-    .topbar{
-      position:fixed; left:0; right:0; top:0;
-      padding:14px 16px;
-      display:flex; justify-content:space-between; align-items:center;
-      z-index:50;
-      pointer-events:none;
-    }
-    .pill{
-      pointer-events:auto;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      font-size:12px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.07);
-      backdrop-filter: blur(10px);
-    }
-    .pill a{ color:#fff; text-decoration:none; }
-
-    .wrap{
-      height:100%;
-      display:grid;
-      place-items:center;
-      padding:18px;
-    }
-
-    /* ===== BOOK STAGE ===== */
-    .stage{
-      width:min(980px, 96vw);
-      height:min(650px, 82vh);
-      position:relative;
-      perspective: 1800px;
-    }
-
-    /* Closed state: book is a single object */
-    .closedBook{
-      width: min(520px, 92vw);
-      height: min(620px, 82vh);
-      border-radius: 22px;
-      background:
-        radial-gradient(900px 500px at 20% 0%, rgba(255,255,255,.10), transparent 60%),
-        linear-gradient(135deg, rgba(255,61,110,.55), rgba(255,209,223,.28)),
-        #3a0b1a;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,.16);
-      position:absolute;
-      left:50%; top:50%;
-      transform: translate(-50%,-50%);
-      overflow:hidden;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      transition: transform .35s ease, filter .35s ease, opacity .25s ease;
-    }
-    .closedBook:hover{ filter: brightness(1.03); transform: translate(-50%,-50%) scale(1.01); }
-    .closedBook:active{ transform: translate(-50%,-50%) scale(.99); }
-
-    .closedInner{
-      width: 86%;
-      max-width: 420px;
-      padding: 22px 18px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(10px);
-    }
-    .closedTitle{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      font-weight: 950;
-      letter-spacing:-.03em;
-      font-size: clamp(26px, 5vw, 44px);
-      margin: 10px 0 6px;
-    }
-    .closedSub{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      font-size: 13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      opacity:.85;
-      margin:0 0 10px;
-    }
-    .closedHint{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      opacity:.9;
-      margin: 0;
-      font-size: 14px;
-    }
-    .closedBtn{
-      margin-top: 14px;
-      display:inline-block;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-family: ui-sans-serif, system-ui;
-      font-weight: 950;
-      color:#0b0610;
-      background: linear-gradient(90deg, #ff3d6e, #ffd1df);
-      box-shadow: 0 18px 40px rgba(0,0,0,.22);
-    }
-
-    /* ===== OPEN BOOK (two pages) ===== */
-    .book{
-      width: 100%;
-      height: 100%;
-      position:absolute;
-      left:50%; top:50%;
-      transform: translate(-50%,-50%) scale(.98);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .35s ease, transform .35s ease;
-    }
-    .book.open{
-      opacity:1;
-      transform: translate(-50%,-50%) scale(1);
-      pointer-events:auto;
-    }
-
-    /* Page area */
-    .spread{
-      width: 100%;
-      height: 100%;
-      position:relative;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-    }
-    .pageBase{
-      border-radius: var(--radius);
-      background: var(--paper);
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-    .paperTex{
-      position:absolute; inset:0;
-      background:
-        radial-gradient(900px 500px at 20% 0%, rgba(255,61,110,.08), transparent 60%),
-        radial-gradient(600px 400px at 90% 30%, rgba(0,0,0,.06), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,0));
-      opacity:.92;
-      pointer-events:none;
-    }
-
-    /* Content */
-    .content{
-      position:relative;
-      height:100%;
-      padding: 28px 24px;
-      color: var(--ink);
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .small{
-      font-family: ui-sans-serif, system-ui;
-      color: rgba(43,31,34,.75);
-      font-size: 12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-    .title{
-      font-family: ui-sans-serif, system-ui;
-      font-weight: 950;
-      letter-spacing:-.03em;
-      margin: 0;
-      font-size: clamp(20px, 2.8vw, 34px);
-    }
-    .note{
-      font-family: ui-sans-serif, system-ui;
-      color: rgba(43,31,34,.88);
-      font-size: 15px;
-      line-height: 1.7;
-      margin: 0;
-    }
-    .card{
-      background:#fff;
-      border:1px solid rgba(0,0,0,.08);
-      border-radius:16px;
-      padding:14px;
-      box-shadow: var(--pageShadow);
-    }
-    .photo{
-      width:100%;
-      height: 220px;
-      border-radius:12px;
-      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
-      display:grid;
-      place-items:center;
-      font-family: ui-sans-serif, system-ui;
-      color: rgba(43,31,34,.55);
-      font-size: 13px;
-      overflow:hidden;
-    }
-    .photo img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    /* ===== Turning page (page curl-ish) ===== */
-    .turnLayer{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      z-index:20;
-      transform-style:preserve-3d;
-      perspective: 1800px;
-    }
-
-    .turnPage{
-      position:absolute;
-      top:0;
-      width:50%;
-      height:100%;
-      right:0; /* right page turns */
-      transform-origin: left center;
-      transform: rotateY(0deg);
-      transition: transform .75s cubic-bezier(.2,.9,.2,1);
-      border-radius: var(--radius);
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      background: var(--paper);
-    }
-    .turnPage::after{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.16), transparent 22%),
-        radial-gradient(400px 320px at 10% 50%, rgba(0,0,0,.22), transparent 55%);
-      opacity:.55;
-      pointer-events:none;
-    }
-    .turnFront, .turnBack{
-      position:absolute; inset:0;
-      backface-visibility:hidden;
-    }
-    .turnBack{
-      transform: rotateY(180deg);
-    }
-
-    /* when turning */
-    .turning .turnPage{
-      transform: rotateY(-180deg);
-    }
-
-    /* ===== Controls ===== */
-    .controls{
-      position:fixed;
-      left:0; right:0; bottom:16px;
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      z-index:60;
-    }
-    .btn{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      border:0;
-      cursor:pointer;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-weight:900;
-      color:#0b0610;
-      background: linear-gradient(90deg, #ff3d6e, #ffd1df);
-      box-shadow: 0 18px 40px rgba(0,0,0,.22);
-    }
-    .btn.ghost{
-      background: rgba(255,255,255,.10);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:none;
-      backdrop-filter: blur(10px);
-    }
-    .btn:disabled{ opacity:.5; cursor:not-allowed; }
-
-    @media (max-width: 860px){
-      .photo{ height: 190px; }
-    }
-    @media (max-width: 740px){
-      /* still keep a book feel, but reduce width */
-      .stage{ height:min(680px, 86vh); }
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Our Mini Magazine 💘</title>
+  <link rel="stylesheet" href="magazine.css" />
 </head>
-
 <body>
-  <div class="topbar">
-    <div class="pill">Our Magazine</div>
-    <div class="pill"><a href="valentine.html">← back</a></div>
-  </div>
 
-  <div class="wrap">
-    <div class="stage">
-
-      <!-- CLOSED COVER -->
-      <div class="closedBook" id="closedBook" aria-label="Open the magazine">
-        <div class="closedInner">
-          <div class="closedSub">Tap to open</div>
-          <div class="closedTitle">Our Little Magazine ❤️</div>
-          <p class="closedHint">I made this just for you.</p>
-          <div class="closedBtn">Open →</div>
-        </div>
+  <!-- CLOSED COVER (click to open) -->
+  <div class="closed" id="closedCover">
+    <div class="closed-book">
+      <div class="closed-front">
+        <div class="masthead">THE LOVE EDITION</div>
+        <div class="big">US</div>
+        <div class="tagline">a tiny magazine • infinite feelings</div>
+        <div class="badge">tap to open</div>
       </div>
-
-      <!-- OPEN BOOK -->
-      <div class="book" id="book">
-        <div class="spread">
-          <!-- LEFT PAGE (static) -->
-          <section class="pageBase" id="leftPage">
-            <div class="paperTex"></div>
-            <div class="content" id="leftContent"></div>
-          </section>
-
-          <!-- RIGHT PAGE (static, sits under turning page) -->
-          <section class="pageBase" id="rightPage">
-            <div class="paperTex"></div>
-            <div class="content" id="rightContent"></div>
-          </section>
-
-          <!-- Turning layer -->
-          <div class="turnLayer" id="turnLayer">
-            <div class="turnPage" id="turnPage">
-              <div class="turnFront">
-                <div class="paperTex"></div>
-                <div class="content" id="turnFrontContent"></div>
-              </div>
-              <div class="turnBack">
-                <div class="paperTex"></div>
-                <div class="content" id="turnBackContent"></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
+      <div class="closed-spine"></div>
     </div>
   </div>
 
-  <div class="controls">
-    <button class="btn ghost" id="prevBtn" type="button">← Prev</button>
-    <button class="btn" id="nextBtn" type="button">Next →</button>
+  <!-- FLIPBOOK -->
+  <div class="scene" id="scene">
+    <div class="toolbar">
+      <button class="tbtn" id="prevBtn">‹</button>
+      <div class="tcenter">
+        <div class="tTitle">Mini Magazine</div>
+        <div class="tSub">drag corner • swipe • use arrows</div>
+      </div>
+      <button class="tbtn" id="nextBtn">›</button>
+    </div>
+
+    <div class="book-wrap">
+      <div class="flip-book" id="book">
+        <!-- HARD COVER -->
+        <div class="page page-cover page-cover-top" data-density="hard">
+          <div class="page-content cover">
+            <div class="cover-top">THE LOVE EDITION</div>
+            <div class="cover-title">Her Name</div>
+            <div class="cover-sub">Vol. 1 • February</div>
+
+            <div class="cover-grid">
+              <div class="cover-card">
+                <div class="kicker">Feature</div>
+                <div class="headline">Why I’m obsessed</div>
+                <div class="small">Spoiler: everything about you.</div>
+              </div>
+              <div class="cover-card">
+                <div class="kicker">Inside</div>
+                <div class="headline">Moments</div>
+                <div class="small">Tiny memories. Big feels.</div>
+              </div>
+            </div>
+
+            <div class="cover-foot">Tap/drag the corner →</div>
+          </div>
+        </div>
+
+        <!-- PAGE 1 (inside cover) -->
+        <div class="page">
+          <div class="page-content">
+            <div class="page-kicker">Contents</div>
+            <div class="page-h1">What’s inside</div>
+
+            <div class="contents">
+              <div class="row"><span>1</span><b>Editor’s Note</b><i>because I had things to say</i></div>
+              <div class="row"><span>2</span><b>Our Highlights</b><i>small moments, big smiles</i></div>
+              <div class="row"><span>3</span><b>Reasons I Like You</b><i>short list (still long)</i></div>
+              <div class="row"><span>4</span><b>Photo Spread</b><i>add your pics here</i></div>
+              <div class="row"><span>5</span><b>Love Letter</b><i>the soft ending</i></div>
+            </div>
+
+            <div class="page-footer">1</div>
+          </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="page">
+          <div class="page-content">
+            <div class="page-kicker">Editor’s Note</div>
+            <div class="page-h1">Hi, it’s me.</div>
+
+            <div class="two-col">
+              <p>
+                I made this because you deserve cute things.
+                Also because I’m shamelessly in love with you.
+              </p>
+              <p>
+                If you’re reading this… you’re stuck with me.
+                (In the best way.)
+              </p>
+            </div>
+
+            <div class="quote">
+              “You’re my favorite part of every day.”
+            </div>
+
+            <div class="page-footer">2</div>
+          </div>
+        </div>
+
+        <!-- PAGE 3 -->
+        <div class="page">
+          <div class="page-content">
+            <div class="page-kicker">Highlights</div>
+            <div class="page-h1">Tiny moments</div>
+
+            <ul class="bullets">
+              <li>The way you laugh and forget to be “cool”.</li>
+              <li>When you say my name and I melt.</li>
+              <li>Your random cute anger.</li>
+              <li>When you exist near me = peace.</li>
+            </ul>
+
+            <div class="page-footer">3</div>
+          </div>
+        </div>
+
+        <!-- PAGE 4 (PHOTO SPREAD placeholder) -->
+        <div class="page">
+          <div class="page-content">
+            <div class="page-kicker">Photo Spread</div>
+            <div class="page-h1">Us, in pictures</div>
+
+            <div class="photo-grid">
+              <div class="ph">Drop photo 1</div>
+              <div class="ph">Drop photo 2</div>
+              <div class="ph">Drop photo 3</div>
+              <div class="ph">Drop photo 4</div>
+            </div>
+
+            <div class="page-footer">4</div>
+          </div>
+        </div>
+
+        <!-- PAGE 5 -->
+        <div class="page">
+          <div class="page-content">
+            <div class="page-kicker">Love Letter</div>
+            <div class="page-h1">For you.</div>
+
+            <div class="letter">
+              <p>Here’s the truth:</p>
+              <p>I like you a lot. I’m proud of you. I’m grateful for you.</p>
+              <p>And I’ll keep choosing you—softly, loudly, always.</p>
+              <p class="sig">— Me 💘</p>
+            </div>
+
+            <div class="page-footer">5</div>
+          </div>
+        </div>
+
+        <!-- HARD BACK COVER -->
+        <div class="page page-cover page-cover-bottom" data-density="hard">
+          <div class="page-content backcover">
+            <div class="end">THE END</div>
+            <div class="endSub">but not really 🙂</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hintbar">Tip: swipe to turn pages • double-tap to zoom (mobile)</div>
   </div>
 
-  <script>
-    // Pages are displayed as spreads: [left, right], [left, right], ...
-    // We animate turning the RIGHT page only (like a real book).
-    const pages = [
-      {
-        label: "Cover Note",
-        html: `
-          <div class="small">TO MY DEAREST</div>
-          <h2 class="title">Will you be my Valentine?</h2>
-          <p class="note">This is your official invitation. (Yes is the correct answer 🙂)</p>
-          <div class="card">
-            <div class="small">PHOTO</div>
-            <div class="photo">Drop a photo here (optional)</div>
-            <p class="note" style="margin-top:10px;">Caption: “us being cute” 😌</p>
-          </div>
-        `
-      },
-      {
-        label: "Why You",
-        html: `
-          <div class="small">PAGE 1</div>
-          <h2 class="title">Why you’re my favorite person</h2>
-          <p class="note">
-            • You make normal days feel special.<br/>
-            • Your smile fixes my mood instantly.<br/>
-            • You’re cute AND annoying (perfect combo).<br/>
-            • I feel safe with you.
-          </p>
-          <div class="card">
-            <div class="small">NOTE</div>
-            <p class="note">If I could, I’d hug you and keep you forever 🤍</p>
-          </div>
-        `
-      },
-      {
-        label: "Tiny Things",
-        html: `
-          <div class="small">PAGE 2</div>
-          <h2 class="title">Tiny things I love about you</h2>
-          <p class="note">
-            1) The way you talk when you’re excited.<br/>
-            2) How you pretend you’re not soft (but you are).<br/>
-            3) Your laugh. Instant serotonin.<br/>
-            4) Your eyes when you’re happy.
-          </p>
-          <div class="card">
-            <div class="small">MEMORY</div>
-            <p class="note">Write one inside-joke memory here 😌</p>
-          </div>
-        `
-      },
-      {
-        label: "My Promise",
-        html: `
-          <div class="small">PAGE 3</div>
-          <h2 class="title">My promise</h2>
-          <p class="note">
-            I’ll choose you — in easy days and messy ones.<br/>
-            I’ll listen, I’ll try, I’ll show up.
-          </p>
-          <div class="card">
-            <div class="small">MORE</div>
-            <p class="note">Whenever you feel low, I’ll remind you you’re loved. A lot.</p>
-          </div>
-        `
-      },
-      {
-        label: "Reasons",
-        html: `
-          <div class="small">PAGE 4</div>
-          <h2 class="title">Reasons you can’t say no</h2>
-          <p class="note">
-            • I’m cute.<br/>
-            • I made a whole website.<br/>
-            • This is basically effort + love.<br/>
-            • And you like me. (Don’t lie.)
-          </p>
-          <div class="card">
-            <div class="small">FINAL NOTE</div>
-            <p class="note">If you’re smiling right now, my mission is complete ❤️</p>
-          </div>
-        `
-      },
-      {
-        label: "The End",
-        html: `
-          <div class="small">THE END</div>
-          <h2 class="title">So… will you be my Valentine?</h2>
-          <p class="note">(Say yes and I’ll act normal. For 5 minutes.)</p>
-          <div style="margin-top:14px;">
-            <button id="yesFinal" class="btn" type="button">Yes 😌❤️</button>
-          </div>
-        `
-      }
-    ];
-
-    const closedBook = document.getElementById("closedBook");
-    const book = document.getElementById("book");
-
-    const leftContent = document.getElementById("leftContent");
-    const rightContent = document.getElementById("rightContent");
-    const turnLayer = document.getElementById("turnLayer");
-    const turnPage = document.getElementById("turnPage");
-    const turnFrontContent = document.getElementById("turnFrontContent");
-    const turnBackContent = document.getElementById("turnBackContent");
-
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    let isOpen = false;
-    let isTurning = false;
-
-    // spreadIndex shows which spread you're on:
-    // spread 0 = pages[0] left, pages[1] right
-    // spread 1 = pages[2] left, pages[3] right ...
-    let spreadIndex = 0;
-
-    function pageAt(i){
-      return pages[i] ? pages[i].html : `<div class="small">Blank</div><p class="note">🙂</p>`;
-    }
-
-    function renderSpread(){
-      const leftPageIndex = spreadIndex * 2;
-      const rightPageIndex = leftPageIndex + 1;
-
-      leftContent.innerHTML = pageAt(leftPageIndex);
-      rightContent.innerHTML = pageAt(rightPageIndex);
-
-      prevBtn.disabled = spreadIndex === 0;
-      nextBtn.disabled = rightPageIndex >= pages.length - 1; // last page reached
-
-      // wire final button if visible
-      const yesBtn = document.getElementById("yesFinal");
-      if (yesBtn){
-        yesBtn.addEventListener("click", () => alert("Correct answer 😌❤️"));
-      }
-    }
-
-    function openBook(){
-      if (isOpen) return;
-      isOpen = true;
-      closedBook.style.opacity = "0";
-      closedBook.style.pointerEvents = "none";
-      setTimeout(() => {
-        book.classList.add("open");
-      }, 120);
-
-      spreadIndex = 0;
-      renderSpread();
-    }
-
-    // Turn right page to next spread (realistic)
-    function next(){
-      if (!isOpen || isTurning) return;
-
-      const leftPageIndex = spreadIndex * 2;
-      const rightPageIndex = leftPageIndex + 1;
-
-      // If there's no next right page, stop
-      if (rightPageIndex >= pages.length - 1) return;
-
-      isTurning = true;
-
-      // Turn page shows current RIGHT page on front,
-      // and the NEXT LEFT page on its back (as it flips over)
-      turnFrontContent.innerHTML = pageAt(rightPageIndex);
-      turnBackContent.innerHTML  = pageAt(rightPageIndex + 1);
-
-      // Ensure turning layer visible
-      turnLayer.style.pointerEvents = "auto";
-      turnPage.style.display = "block";
-
-      // Start animation
-      turnLayer.classList.add("turning");
-
-      // After flip ends, advance spread and render
-      setTimeout(() => {
-        turnLayer.classList.remove("turning");
-        spreadIndex++;
-        renderSpread();
-        isTurning = false;
-      }, 780);
-    }
-
-    function prev(){
-      if (!isOpen || isTurning) return;
-      if (spreadIndex === 0) return;
-
-      // For "prev", we simulate turning the left page backwards by
-      // temporarily swapping book direction: easiest illusion is to:
-      // 1) go back spread immediately
-      // 2) do a small fade to hide the lack of reverse-curl
-      // (Looks fine + not "flip sheet" vibe)
-      isTurning = true;
-
-      book.style.opacity = "0.92";
-      setTimeout(() => {
-        spreadIndex--;
-        renderSpread();
-        book.style.opacity = "1";
-        isTurning = false;
-      }, 180);
-    }
-
-    // Controls
-    prevBtn.addEventListener("click", prev);
-    nextBtn.addEventListener("click", next);
-
-    // Click cover to open
-    closedBook.addEventListener("click", openBook);
-
-    // Click right side to next, left side to prev (feels natural)
-    book.addEventListener("click", (e) => {
-      const rect = book.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      if (x > rect.width/2) next();
-      else prev();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " "){
-        if (!isOpen) openBook();
-        else next();
-      }
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-    });
-
-    // Start closed; open only on click
-    // (renderSpread will run after open)
-  </script>
+  <!-- StPageFlip CDN build -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+  <script src="magazine.js"></script>
 </body>
 </html>
