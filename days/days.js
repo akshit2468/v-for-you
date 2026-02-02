@@ -1,48 +1,52 @@
-const particleLayer = document.querySelector(".particles");
-const hero = document.querySelector("[data-hero]");
-const heroEmoji = document.querySelector(".heroEmoji");
-const heroImg = document.querySelector(".heroImg");
+// days.js — navigation across Valentine week pages
+// Put this file in the same folder as your day html files.
 
-const stickerList = (document.body.getAttribute("data-particles") || "❤️,✨")
-  .split(",")
-  .map(s => s.trim())
-  .filter(Boolean);
+const ORDER = [
+  "rose.html",
+  "propose.html",
+  "chocolate.html",
+  "teddy.html",
+  "promise.html",
+  "hug.html",
+  "kiss.html",
+  "valentine.html"
+];
 
-function spawnParticle() {
-  if (!particleLayer) return;
-  const p = document.createElement("div");
-  p.className = "p";
-  p.textContent = stickerList[Math.floor(Math.random() * stickerList.length)];
-  p.style.left = (Math.random() * 100) + "vw";
-  p.style.fontSize = (14 + Math.random() * 26) + "px";
-  p.style.opacity = (0.18 + Math.random() * 0.45).toFixed(2);
-  p.style.animationDuration = (7 + Math.random() * 8) + "s";
-  particleLayer.appendChild(p);
-  setTimeout(() => p.remove(), 17000);
+function currentFile() {
+  const path = window.location.pathname;
+  return path.substring(path.lastIndexOf("/") + 1) || "rose.html";
 }
 
-for (let i = 0; i < 12; i++) setTimeout(spawnParticle, i * 160);
-setInterval(spawnParticle, 520);
-
-// hero re-pop on click
-function repop(el) {
-  if (!el) return;
-  el.style.animation = "none";
-  // force reflow
-  void el.offsetHeight;
-  el.style.animation = "";
+function goTo(file) {
+  // Keep relative navigation working on GitHub Pages
+  const base = window.location.pathname.replace(/[^/]+$/, "");
+  window.location.href = base + file;
 }
 
-if (hero) {
-  hero.addEventListener("click", () => {
-    repop(heroEmoji);
-    repop(heroImg);
-    // burst particles
-    for (let i = 0; i < 10; i++) setTimeout(spawnParticle, i * 30);
-    // tiny shake
-    hero.animate(
-      [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }],
-      { duration: 220, easing: "ease-out" }
-    );
+function setupNav() {
+  const file = currentFile();
+  const idx = ORDER.indexOf(file);
+
+  document.querySelectorAll("[data-nav='back']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const prev = ORDER[Math.max(0, idx - 1)];
+      goTo(prev);
+    });
+  });
+
+  document.querySelectorAll("[data-nav='next']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const next = ORDER[Math.min(ORDER.length - 1, idx + 1)];
+      goTo(next);
+    });
+  });
+
+  // Keyboard arrows
+  window.addEventListener("keydown", (e) => {
+    if (idx === -1) return;
+    if (e.key === "ArrowLeft") goTo(ORDER[Math.max(0, idx - 1)]);
+    if (e.key === "ArrowRight") goTo(ORDER[Math.min(ORDER.length - 1, idx + 1)]);
   });
 }
+
+document.addEventListener("DOMContentLoaded", setupNav);
