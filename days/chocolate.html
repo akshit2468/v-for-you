@@ -1,42 +1,37 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Chocolate Day 🍫</title>
-  <link rel="stylesheet" href="days.css"/>
+<!doctype html><html><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chocolate Day 🍫</title>
+<style>
+html,body{height:100%;margin:0}
+body{
+  overflow:hidden;display:grid;place-items:center;
+  font-family:system-ui;color:#fff;
+  background:linear-gradient(180deg,#0b0605,#1a0d08);
+}
+.fall{position:fixed;inset:0;pointer-events:none}
+.f{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(120vh)}}
+.center{text-align:center}
+h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
+p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
+</style>
 </head>
-<body class="theme-choco" data-particles="🍫,🍬,✨,💗,💌">
-  <div class="bg" aria-hidden="true"></div>
-  <div class="particles" aria-hidden="true"></div>
-
-  <main class="stage">
-    <section class="card">
-      <div class="top">
-        <div class="pill">Chocolate Day 🍫</div>
-        <div class="pill"><a href="../index.html">back</a></div>
-      </div>
-
-      <div class="center">
-        <div class="heroWrap">
-          <div class="hero" data-hero>
-            <div class="heroEmoji">🍫</div>
-          </div>
-          <div class="hint">tap the chocolate</div>
-        </div>
-
-        <div class="text">
-          <h1 class="h1">Sweet day.</h1>
-          <div class="lines">
-            <div class="line">Chocolate is cute…</div>
-            <div class="line">but you’re the sweetest thing here.</div>
-            <div class="line">I owe you one bite. (I’m stealing two.)</div>
-          </div>
-          <div class="cta">tap for candy sparkle ✨</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="days.js"></script>
-</body>
-</html>
+<body>
+<div class="fall" id="fall"></div>
+<div class="center">
+  <h1>Sweet like you 🍫</h1>
+  <p>Happy Chocolate Day</p>
+</div>
+<script>
+const icons=["🍫","🍬","✨","💗"], f=document.getElementById("fall");
+function drop(){
+  const e=document.createElement("div");
+  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=18+Math.random()*28+"px";
+  e.style.animationDuration=6+Math.random()*7+"s";
+  f.appendChild(e); setTimeout(()=>e.remove(),15000);
+}
+setInterval(drop,450);
+</script>
+</body></html>
