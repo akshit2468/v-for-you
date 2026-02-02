@@ -86,31 +86,53 @@
     .tSub{ font-size:12px; opacity:.8; letter-spacing:.12em; text-transform:uppercase }
 
     .book-wrap{display:grid; place-items:center; padding:16px}
+
+    /* Fixed base size (prevents mid-flip stretch jumps) */
     .flip-book{
-      width:min(920px, 94vw);
-      height:min(640px, 74vh);
+      width: 920px;   /* spread width = 2 * 460 */
+      height: 640px;
+      transform-origin: center;
+    }
+    @media (max-width: 980px), (max-height: 720px){
+      .flip-book{
+        transform: scale(min(1, calc(100vw / 980), calc(100vh / 760)));
+      }
     }
 
+    /* IMPORTANT: keep flipping element clean */
     .page{
-      background: var(--paper);
-      color: var(--ink);
-      border-radius: 10px;
-      overflow:hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+      background: transparent;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: none;
+      will-change: transform;
     }
+
+    /* paper look is drawn inside using ::before */
     .page-content{
+      position:relative;
       height:100%;
       padding: 26px 26px 18px;
+      color: var(--ink);
+      background: transparent;
+    }
+    .page-content::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 14px;
       background:
         radial-gradient(1100px 600px at 30% 10%, rgba(0,0,0,.03), transparent 60%),
         repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0px, rgba(0,0,0,.015) 1px, transparent 10px, transparent 16px),
         var(--paper);
-      position:relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+      z-index:0;
     }
+    .page-content > *{ position:relative; z-index:1; }
 
-    .page-cover .page-content{
+    .page-cover .page-content{ color:#12050c; }
+    .page-cover .page-content::before{
       background: linear-gradient(135deg, rgba(255,61,110,.92), rgba(255,209,223,.72));
-      color:#12050c;
     }
 
     .cover-top{font-weight:950; letter-spacing:.22em; text-transform:uppercase; font-size:12px}
@@ -148,7 +170,6 @@
       text-transform:uppercase;
     }
 
-    /* Error toast */
     .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
       background: rgba(0,0,0,.55);
@@ -194,6 +215,17 @@
     <div class="book-wrap">
       <div class="flip-book" id="book">
 
+        <!-- ✅ NEW: backing page so flipping left never jumps into "single cover mode" -->
+        <div class="page page-cover" data-density="hard">
+          <div class="page-content" style="display:grid; place-items:center; text-align:center;">
+            <div style="font-weight:1000; letter-spacing:.14em; text-transform:uppercase; font-size:14px; opacity:.9;">
+              THE LOVE EDITION
+            </div>
+            <div style="margin-top:10px; opacity:.8;">cover backing</div>
+          </div>
+        </div>
+
+        <!-- cover -->
         <div class="page page-cover" data-density="hard">
           <div class="page-content">
             <div class="cover-top">THE LOVE EDITION</div>
@@ -233,12 +265,23 @@
           </div>
         </div>
 
+        <!-- back cover -->
         <div class="page page-cover" data-density="hard">
           <div class="page-content" style="display:grid; place-items:center; text-align:center;">
             <div style="font-weight:1000; letter-spacing:-.06em; font-size:60px;">THE END</div>
             <div style="margin-top:10px; font-size:14px; letter-spacing:.14em; text-transform:uppercase; opacity:.9;">
               but not really 🙂
             </div>
+          </div>
+        </div>
+
+        <!-- ✅ NEW: backing page at the end as well -->
+        <div class="page page-cover" data-density="hard">
+          <div class="page-content" style="display:grid; place-items:center; text-align:center;">
+            <div style="font-weight:1000; letter-spacing:.14em; text-transform:uppercase; font-size:14px; opacity:.9;">
+              THANK YOU
+            </div>
+            <div style="margin-top:10px; opacity:.8;">back cover backing</div>
           </div>
         </div>
 
@@ -250,7 +293,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- StPageFlip CDN (must load BEFORE our script) -->
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 
   <script>
@@ -261,41 +303,50 @@
       setTimeout(()=>t.classList.remove("show"), 6000);
     };
 
-    function calcSize(){
-      const w = Math.min(920, window.innerWidth * 0.94);
-      const h = Math.min(640, window.innerHeight * 0.74);
-      const width = Math.max(320, Math.floor(w / 2));
-      const height = Math.max(460, Math.floor(h));
-      return { width, height };
-    }
-
     let pageFlip = null;
 
     function initFlip(){
       try{
         if (!window.St || !window.St.PageFlip) {
-          toast("PageFlip library didn’t load. If you’re on mobile data, try again or switch network.");
+          toast("PageFlip library didn’t load. Try reload.");
           return;
         }
 
         const bookEl = document.getElementById("book");
-        const { width, height } = calcSize();
+
+        // fixed size (we scale with CSS)
+        const width = 460;
+        const height = 640;
 
         pageFlip = new St.PageFlip(bookEl, {
           width,
           height,
-          size: "stretch",
-          autoSize: true,
-          maxShadowOpacity: 0.35,
-          showCover: true,
+          size: "fixed",
+          autoSize: false,
+
+          // ✅ KEY: prevents the left-side displacement
+          showCover: false,
+
+          // smoother
+          flippingTime: 1200,
+          maxShadowOpacity: 0.18,
+
+          // corner-only
+          dragArea: 0.10,
+
+          // no snap flips
+          disableFlipByClick: true,
+
           mobileScrollSupport: false,
           useMouseEvents: true
         });
 
         pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
+
+        try { pageFlip.getFlipController().setSwipeDistance(60); } catch(e) {}
       }catch(e){
         console.error(e);
-        toast("Init failed. Open DevTools console to see the error.");
+        toast("Init failed. Open console.");
       }
     }
 
@@ -305,16 +356,9 @@
       if (!pageFlip) initFlip();
     }
 
-    // attach AFTER DOM is ready
     document.getElementById("closedCover").addEventListener("click", openMagazine);
     document.getElementById("prevBtn").addEventListener("click", ()=> pageFlip && pageFlip.flipPrev());
     document.getElementById("nextBtn").addEventListener("click", ()=> pageFlip && pageFlip.flipNext());
-
-    window.addEventListener("resize", ()=>{
-      if (!pageFlip) return;
-      const { width, height } = calcSize();
-      pageFlip.update({ width, height });
-    });
   </script>
 </body>
 </html>
