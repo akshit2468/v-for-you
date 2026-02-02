@@ -1,42 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Kiss Day 😘</title>
-  <link rel="stylesheet" href="days.css"/>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kiss Day 😘</title><link rel="stylesheet" href="styles.css"/>
 </head>
-<body class="theme-kiss" data-particles="💋,😘,❤️,✨,💌">
-  <div class="bg" aria-hidden="true"></div>
-  <div class="particles" aria-hidden="true"></div>
+<body class="theme-kiss" data-next="valentine.html"
+data-lines='[
+  "Kiss Day 😘",
+  "One kiss for your forehead (for peace).",
+  "One for your cheek (for your smile).",
+  "And one that says… I’m yours."
+]'>
+<div class="bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
+<div class="hearts" aria-hidden="true"></div>
+<main class="stage">
+  <section class="screen">
+    <div class="topline"><div class="tag">Valentine Week</div><div class="daycount">Day 5 / 8</div></div>
+    <h1 class="headline">Hey <span id="name">Love</span> ❤️</h1>
+    <div class="subtitle">Kiss Day 😘</div>
 
-  <main class="stage">
-    <section class="card">
-      <div class="top">
-        <div class="pill">Kiss Day 😘</div>
-        <div class="pill"><a href="../index.html">back</a></div>
-      </div>
+    <img class="bear" src="assets/bears/kiss.webp" alt="kiss day bear" />
 
-      <div class="center">
-        <div class="heroWrap">
-          <div class="hero" data-hero>
-            <div class="heroEmoji">💋</div>
-          </div>
-          <div class="hint">tap the kiss</div>
-        </div>
-
-        <div class="text">
-          <h1 class="h1">One kiss.</h1>
-          <div class="lines">
-            <div class="line">Forehead kiss for peace.</div>
-            <div class="line">Cheek kiss for your smile.</div>
-            <div class="line">And one that says: I’m yours.</div>
-          </div>
-          <div class="cta">tap for sparkle burst ✨</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="days.js"></script>
-</body>
-</html>
+    <p class="line" id="line">Tap anywhere to begin.</p>
+    <p class="hint" id="hint">(Tap / Space / Enter)</p>
+    <div class="actions"><button class="btn" id="nextBtn" type="button">Continue →</button></div>
+  </section>
+</main>
+<script src="script.js"></script>
+</body></html>
