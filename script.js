@@ -1,39 +1,106 @@
-// script.js — floating hearts (lightweight)
+// ====== EDIT THIS ======
+const herName = "Your Girl"; // change name here
+// =======================
 
-const layer = document.querySelector(".hearts");
-
-function rand(min, max){
-  return Math.random() * (max - min) + min;
+function getLines() {
+  const raw = document.body.getAttribute("data-lines") || "[]";
+  try { return JSON.parse(raw); } catch { return ["(Lines JSON is invalid.)"]; }
 }
 
+const lines = getLines();
+let i = -1;
+
+const nameEl = document.getElementById("name");
+if (nameEl) nameEl.textContent = herName;
+
+const lineEl = document.getElementById("line");
+const hintEl = document.getElementById("hint");
+const nextBtn = document.getElementById("nextBtn");
+
+function setLine(text) {
+  lineEl.style.opacity = "0";
+  lineEl.style.transform = "translateY(8px)";
+  setTimeout(() => {
+    lineEl.textContent = text;
+    lineEl.style.transition = "opacity .28s ease, transform .28s ease";
+    lineEl.style.opacity = "1";
+    lineEl.style.transform = "translateY(0)";
+  }, 120);
+}
+
+function go(url){
+  document.body.classList.add("fade-out");
+  setTimeout(() => { window.location.href = url; }, 260);
+}
+
+function next(){
+  i++;
+
+  if (hintEl && i >= 0) hintEl.textContent = " ";
+
+  if (i < lines.length){
+    setLine(lines[i]);
+
+    const nextUrl = document.body.getAttribute("data-next");
+    const customLabel = document.body.getAttribute("data-next-label");
+
+    if (i === lines.length - 1 && nextUrl){
+      nextBtn.textContent = customLabel || "Next day →";
+    }
+    return;
+  }
+
+  const nextUrl = document.body.getAttribute("data-next");
+  if (nextUrl) go(nextUrl);
+}
+
+if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); next(); });
+
+document.addEventListener("click", (e) => {
+  if (e.target.closest("a")) return;
+  if (e.target.closest("button")) return;
+
+  // bounce bear again on each tap (cute)
+  const bear = document.querySelector(".bear");
+  if (bear){
+    bear.style.animation = "none";
+    void bear.offsetHeight;
+    bear.style.animation = "bearPop .35s ease-out";
+  }
+
+  next();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === " " || e.key === "Enter" || e.key === "ArrowRight") next();
+});
+
+document.body.classList.add("fade-in");
+
+// hearts
+const heartsLayer = document.querySelector(".hearts");
 function spawnHeart(){
-  if (!layer) return;
+  if (!heartsLayer) return;
 
   const h = document.createElement("div");
   h.className = "heart";
+  h.style.left = `${Math.random() * 100}vw`;
 
-  const left = rand(0, 100);
-  const size = rand(12, 26);
-  const duration = rand(6, 12);
-  const delay = rand(0, 1.2);
-  const opacity = rand(0.16, 0.32);
+  const size = 10 + Math.random() * 16;
+  h.style.width = `${size}px`;
+  h.style.height = `${size}px`;
 
-  h.style.left = left + "vw";
-  h.style.bottom = "-30px";
-  h.style.width = size + "px";
-  h.style.height = size + "px";
-  h.style.opacity = opacity;
-  h.style.animationDuration = duration + "s";
-  h.style.animationDelay = delay + "s";
+  const styles = getComputedStyle(document.body);
+  const c1 = styles.getPropertyValue("--accent").trim() || "#ff4d7d";
+  const c2 = styles.getPropertyValue("--accent2").trim() || "#ff7aa6";
+  const colors = [c1, c2, "#ffd1df", "#ffffff"];
+  h.style.color = colors[Math.floor(Math.random() * colors.length)];
 
-  layer.appendChild(h);
-  setTimeout(() => h.remove(), (duration + delay) * 1000 + 800);
+  const duration = 6 + Math.random() * 6;
+  h.style.animationDuration = `${duration}s`;
+  h.style.opacity = (0.22 + Math.random() * 0.55).toFixed(2);
+
+  heartsLayer.appendChild(h);
+  setTimeout(() => h.remove(), duration * 1000);
 }
-
-(function start(){
-  spawnHeart();
-  setInterval(() => {
-    const n = Math.random() < 0.6 ? 1 : 2;
-    for (let i = 0; i < n; i++) spawnHeart();
-  }, 550);
-})();
+setInterval(spawnHeart, 420);
