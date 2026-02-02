@@ -2,30 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Promise Day 💍</title>
-  <link rel="stylesheet" href="days.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Promise Day 🤞</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* page-specific layout */
+    .pageWrap{
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 26px 0;
+    }
+    .dayCard{
+      width: min(820px, 92vw);
+      text-align: center;
+      padding: 22px;
+    }
+    .dayTitle{
+      margin: 10px 0 8px;
+      font-weight: 1000;
+      letter-spacing: -0.06em;
+      font-size: clamp(34px, 5vw, 58px);
+    }
+    .daySub{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .gifBox{
+      margin: 12px auto 18px;
+      width: min(360px, 82vw);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+    }
+    .gifBox img{
+      width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: auto;
+    }
+    .navRow{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 520px){
+      .navRow{ grid-template-columns: 1fr; }
+    }
+    .tinyLink{
+      display:inline-block;
+      margin-top: 12px;
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .tinyLink:hover{ text-decoration: underline; }
+  </style>
 </head>
-<body class="day promise">
 
-  <main class="wrap">
-    <div class="card big">
-      <div class="topline">Promise Day 💍</div>
+<body>
+  <div class="hearts" aria-hidden="true"></div>
 
-      <h1 class="title">Pinky promise?</h1>
-      <p class="subtitle">I’ll choose you. Again and again. 🤍</p>
+  <main class="pageWrap">
+    <section class="card dayCard">
+      <div class="pill">PROMISE DAY 🤞</div>
 
-      <div class="hero">
-        <img src="assets/bears/promise.webp" alt="Promise Day gif" />
+      <h1 class="dayTitle">Pinky promise?</h1>
+      <p class="daySub">I’m not going anywhere. It’s you.</p>
+
+      <div class="gifBox">
+        <img src="assets/bears/pinky-promise-bear.webp" alt="Promise Day bear gif">
       </div>
 
-      <div class="nav">
-        <button class="btn" data-nav="back">← Back</button>
-        <button class="btn primary" data-nav="next">Next →</button>
+      <div class="navRow">
+        <a class="btn" href="teddy.html">
+          <span class="btnTitle">← Back</span>
+          <span class="btnSub">Teddy Day</span>
+        </a>
+
+        <a class="btn primary" href="hug.html">
+          <span class="btnTitle">Next →</span>
+          <span class="btnSub">Hug Day</span>
+        </a>
       </div>
-    </div>
+
+      <a class="tinyLink" href="index.html">Back to main page</a>
+    </section>
   </main>
 
-  <script src="days.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
