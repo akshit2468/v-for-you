@@ -2,53 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Valentine Week 💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For You ❤️</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
 
-  <!-- floating background -->
+<body class="theme-valentine fade-in">
+  <div class="bg" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
   <div class="hearts" aria-hidden="true"></div>
 
-  <main class="screen">
-    <section class="panel">
-      <div class="panelTop">
-        <div class="badge">VALENTINE WEEK</div>
-        <div class="counter">8 / 8</div>
+  <main class="stage">
+    <section class="screen">
+      <div class="topline">
+        <div class="tag">One second…</div>
+        <div class="daycount">❤️</div>
       </div>
 
-      <h1 class="h1">Hey Your Girl <span class="emoji">💗</span></h1>
-      <p class="p">One page each day. Small lines. Big feelings.</p>
+      <h1 class="headline">Hey you 👀</h1>
+      <p class="line">I made something for you.</p>
+      <p class="hint">Tap to continue.</p>
 
       <div class="actions">
-        <a class="btn primary" href="ask.html">Start →</a>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="weekTitle">Pick a day</div>
-
-      <div class="weekGrid">
-        <a class="chip" href="rose.html">Rose 🌹</a>
-        <a class="chip" href="propose.html">Propose 💍</a>
-        <a class="chip" href="chocolate.html">Choco 🍫</a>
-
-        <!-- ✅ added -->
-        <a class="chip" href="teddy.html">Teddy 🧸</a>
-        <a class="chip" href="promise.html">Promise 🤞</a>
-
-        <a class="chip" href="hug.html">Hug 🤗</a>
-        <a class="chip" href="kiss.html">Kiss 💋</a>
-        <a class="chip hot" href="valentine.html">Valentine ❤️</a>
-      </div>
-
-      <div class="tiny">
-        Tip: If a link opens 404, hard refresh (Ctrl + F5) after pushing.
+        <button class="btn" id="startBtn" type="button">Okay →</button>
       </div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.body.classList.add("fade-out");
+      setTimeout(() => { location.href = "ask.html"; }, 300);
+    });
+  </script>
 </body>
 </html>
