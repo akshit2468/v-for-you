@@ -4,169 +4,317 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Our Mini Magazine 💘</title>
-  <link rel="stylesheet" href="magazine.css" />
+  <style>
+    :root{
+      --bg1:#06040a; --bg2:#1a0612;
+      --paper:#fbf5ea; --ink:#1a1a1a; --muted:#555;
+      --accent:#ff3d6e; --shadow: 0 30px 110px rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 520px at 20% 10%, rgba(255,61,110,.18), transparent 60%),
+        radial-gradient(700px 520px at 85% 40%, rgba(255,209,223,.12), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow:hidden;
+      color:#fff;
+    }
+
+    /* Closed cover overlay */
+    .closed{
+      position:fixed; inset:0; display:grid; place-items:center; z-index:50;
+      cursor:pointer;
+    }
+    .closed-book{
+      width:min(440px, 88vw); height:min(620px, 76vh);
+      position:relative; perspective:1200px;
+    }
+    .closed-front{
+      position:absolute; inset:0;
+      border-radius:26px;
+      background: linear-gradient(135deg, rgba(255,61,110,.95), rgba(255,209,223,.75));
+      box-shadow: var(--shadow);
+      transform: rotateY(-12deg);
+      display:flex; flex-direction:column; justify-content:space-between;
+      padding:22px; color:#12050c;
+      user-select:none;
+    }
+    .closed-spine{
+      position:absolute; left:-16px; top:10px; bottom:10px; width:26px;
+      border-radius:18px;
+      background: rgba(0,0,0,.25);
+      transform: rotateY(22deg);
+    }
+    .masthead{font-weight:950; letter-spacing:.22em; text-transform:uppercase; font-size:12px}
+    .big{font-weight:1000; letter-spacing:-.06em; font-size: clamp(64px, 12vw, 112px); line-height:1}
+    .tagline{font-size:14px; opacity:.9}
+    .badge{
+      width:fit-content; padding:10px 12px; border-radius:999px;
+      background: rgba(255,255,255,.35);
+      border:1px solid rgba(0,0,0,.12);
+      font-weight:900; letter-spacing:.14em; text-transform:uppercase; font-size:12px;
+    }
+
+    /* Scene */
+    .scene{
+      position:fixed; inset:0;
+      display:grid; grid-template-rows:auto 1fr auto;
+      opacity:0; pointer-events:none;
+      transition:opacity .35s ease;
+      z-index:1;
+    }
+    .scene.open{opacity:1; pointer-events:auto}
+
+    .toolbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px; gap:12px;
+      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,.18);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .tbtn{
+      width:46px;height:46px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color:#fff; font-size:22px; cursor:pointer;
+    }
+    .tcenter{ text-align:center; flex:1 }
+    .tTitle{ font-weight:950; letter-spacing:-.02em }
+    .tSub{ font-size:12px; opacity:.8; letter-spacing:.12em; text-transform:uppercase }
+
+    .book-wrap{display:grid; place-items:center; padding:16px}
+    .flip-book{
+      width:min(920px, 94vw);
+      height:min(640px, 74vh);
+    }
+
+    .page{
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 10px;
+      overflow:hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+    }
+    .page-content{
+      height:100%;
+      padding: 26px 26px 18px;
+      background:
+        radial-gradient(1100px 600px at 30% 10%, rgba(0,0,0,.03), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0px, rgba(0,0,0,.015) 1px, transparent 10px, transparent 16px),
+        var(--paper);
+      position:relative;
+    }
+
+    .page-cover .page-content{
+      background: linear-gradient(135deg, rgba(255,61,110,.92), rgba(255,209,223,.72));
+      color:#12050c;
+    }
+
+    .cover-top{font-weight:950; letter-spacing:.22em; text-transform:uppercase; font-size:12px}
+    .cover-title{margin-top:22px; font-weight:1000; letter-spacing:-.06em; font-size:56px; line-height:1}
+    .cover-sub{margin-top:10px; font-size:14px; opacity:.9}
+
+    .page-kicker{
+      font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+      font-weight:950; color: var(--muted);
+    }
+    .page-h1{margin-top:10px; font-size:40px; letter-spacing:-.04em; font-weight:1000}
+
+    .contents{ margin-top:18px; display:grid; gap:12px }
+    .contents .row{
+      display:grid; grid-template-columns: 28px 1fr;
+      gap:12px; align-items:baseline;
+      padding: 12px 14px; border-radius: 14px;
+      border:1px solid rgba(0,0,0,.08); background: rgba(0,0,0,.03);
+    }
+    .contents span{ font-weight:1000; color:#111 }
+    .contents b{ display:block; font-weight:1000 }
+    .contents i{ display:block; color:#666; font-style:normal; font-size:13px; margin-top:2px }
+
+    .page-footer{
+      position:absolute; bottom:12px; right:18px;
+      font-weight:1000; color:#444; opacity:.9;
+    }
+
+    .hintbar{
+      padding: 10px 14px 16px;
+      text-align:center;
+      color: rgba(255,255,255,.78);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    /* Error toast */
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      padding:12px 14px;
+      border-radius: 14px;
+      font-size:13px;
+      max-width:min(520px, 92vw);
+      display:none;
+      z-index:999;
+      backdrop-filter: blur(10px);
+    }
+    .toast.show{display:block}
+  </style>
 </head>
 <body>
 
-  <!-- CLOSED COVER (click to open) -->
-  <div class="closed" id="closedCover">
+  <div class="closed" id="closedCover" aria-label="Open magazine">
     <div class="closed-book">
       <div class="closed-front">
-        <div class="masthead">THE LOVE EDITION</div>
-        <div class="big">US</div>
-        <div class="tagline">a tiny magazine • infinite feelings</div>
+        <div>
+          <div class="masthead">THE LOVE EDITION</div>
+          <div class="big">US</div>
+          <div class="tagline">a tiny magazine • infinite feelings</div>
+        </div>
         <div class="badge">tap to open</div>
       </div>
       <div class="closed-spine"></div>
     </div>
   </div>
 
-  <!-- FLIPBOOK -->
   <div class="scene" id="scene">
     <div class="toolbar">
-      <button class="tbtn" id="prevBtn">‹</button>
+      <button class="tbtn" id="prevBtn" type="button">‹</button>
       <div class="tcenter">
         <div class="tTitle">Mini Magazine</div>
-        <div class="tSub">drag corner • swipe • use arrows</div>
+        <div class="tSub">drag corner • swipe • arrows</div>
       </div>
-      <button class="tbtn" id="nextBtn">›</button>
+      <button class="tbtn" id="nextBtn" type="button">›</button>
     </div>
 
     <div class="book-wrap">
       <div class="flip-book" id="book">
-        <!-- HARD COVER -->
-        <div class="page page-cover page-cover-top" data-density="hard">
-          <div class="page-content cover">
+
+        <div class="page page-cover" data-density="hard">
+          <div class="page-content">
             <div class="cover-top">THE LOVE EDITION</div>
             <div class="cover-title">Her Name</div>
             <div class="cover-sub">Vol. 1 • February</div>
-
-            <div class="cover-grid">
-              <div class="cover-card">
-                <div class="kicker">Feature</div>
-                <div class="headline">Why I’m obsessed</div>
-                <div class="small">Spoiler: everything about you.</div>
-              </div>
-              <div class="cover-card">
-                <div class="kicker">Inside</div>
-                <div class="headline">Moments</div>
-                <div class="small">Tiny memories. Big feels.</div>
-              </div>
+            <div style="position:absolute; bottom:16px; left:26px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; opacity:.9;">
+              Drag the corner →
             </div>
-
-            <div class="cover-foot">Tap/drag the corner →</div>
           </div>
         </div>
 
-        <!-- PAGE 1 (inside cover) -->
         <div class="page">
           <div class="page-content">
             <div class="page-kicker">Contents</div>
             <div class="page-h1">What’s inside</div>
-
             <div class="contents">
               <div class="row"><span>1</span><b>Editor’s Note</b><i>because I had things to say</i></div>
-              <div class="row"><span>2</span><b>Our Highlights</b><i>small moments, big smiles</i></div>
-              <div class="row"><span>3</span><b>Reasons I Like You</b><i>short list (still long)</i></div>
-              <div class="row"><span>4</span><b>Photo Spread</b><i>add your pics here</i></div>
-              <div class="row"><span>5</span><b>Love Letter</b><i>the soft ending</i></div>
+              <div class="row"><span>2</span><b>Highlights</b><i>tiny moments</i></div>
+              <div class="row"><span>3</span><b>Photo Spread</b><i>add pics later</i></div>
+              <div class="row"><span>4</span><b>Love Letter</b><i>the soft ending</i></div>
             </div>
-
             <div class="page-footer">1</div>
           </div>
         </div>
 
-        <!-- PAGE 2 -->
         <div class="page">
           <div class="page-content">
             <div class="page-kicker">Editor’s Note</div>
             <div class="page-h1">Hi, it’s me.</div>
-
-            <div class="two-col">
-              <p>
-                I made this because you deserve cute things.
-                Also because I’m shamelessly in love with you.
-              </p>
-              <p>
-                If you’re reading this… you’re stuck with me.
-                (In the best way.)
-              </p>
+            <div style="margin-top:14px; line-height:1.7; color:#2a2a2a; font-size:16px;">
+              I made this because you deserve cute things.<br/>
+              Also because I’m shamelessly in love with you.<br/><br/>
+              If you’re reading this… you’re stuck with me 🙂<br/>
+              (In the best way.)
             </div>
-
-            <div class="quote">
-              “You’re my favorite part of every day.”
-            </div>
-
             <div class="page-footer">2</div>
           </div>
         </div>
 
-        <!-- PAGE 3 -->
-        <div class="page">
-          <div class="page-content">
-            <div class="page-kicker">Highlights</div>
-            <div class="page-h1">Tiny moments</div>
-
-            <ul class="bullets">
-              <li>The way you laugh and forget to be “cool”.</li>
-              <li>When you say my name and I melt.</li>
-              <li>Your random cute anger.</li>
-              <li>When you exist near me = peace.</li>
-            </ul>
-
-            <div class="page-footer">3</div>
-          </div>
-        </div>
-
-        <!-- PAGE 4 (PHOTO SPREAD placeholder) -->
-        <div class="page">
-          <div class="page-content">
-            <div class="page-kicker">Photo Spread</div>
-            <div class="page-h1">Us, in pictures</div>
-
-            <div class="photo-grid">
-              <div class="ph">Drop photo 1</div>
-              <div class="ph">Drop photo 2</div>
-              <div class="ph">Drop photo 3</div>
-              <div class="ph">Drop photo 4</div>
+        <div class="page page-cover" data-density="hard">
+          <div class="page-content" style="display:grid; place-items:center; text-align:center;">
+            <div style="font-weight:1000; letter-spacing:-.06em; font-size:60px;">THE END</div>
+            <div style="margin-top:10px; font-size:14px; letter-spacing:.14em; text-transform:uppercase; opacity:.9;">
+              but not really 🙂
             </div>
-
-            <div class="page-footer">4</div>
           </div>
         </div>
 
-        <!-- PAGE 5 -->
-        <div class="page">
-          <div class="page-content">
-            <div class="page-kicker">Love Letter</div>
-            <div class="page-h1">For you.</div>
-
-            <div class="letter">
-              <p>Here’s the truth:</p>
-              <p>I like you a lot. I’m proud of you. I’m grateful for you.</p>
-              <p>And I’ll keep choosing you—softly, loudly, always.</p>
-              <p class="sig">— Me 💘</p>
-            </div>
-
-            <div class="page-footer">5</div>
-          </div>
-        </div>
-
-        <!-- HARD BACK COVER -->
-        <div class="page page-cover page-cover-bottom" data-density="hard">
-          <div class="page-content backcover">
-            <div class="end">THE END</div>
-            <div class="endSub">but not really 🙂</div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <div class="hintbar">Tip: swipe to turn pages • double-tap to zoom (mobile)</div>
+    <div class="hintbar">Tip: swipe to turn pages • drag corners • arrows work too</div>
   </div>
 
-  <!-- StPageFlip CDN build -->
+  <div class="toast" id="toast"></div>
+
+  <!-- StPageFlip CDN (must load BEFORE our script) -->
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
-  <script src="magazine.js"></script>
+
+  <script>
+    const toast = (msg) => {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"), 6000);
+    };
+
+    function calcSize(){
+      const w = Math.min(920, window.innerWidth * 0.94);
+      const h = Math.min(640, window.innerHeight * 0.74);
+      const width = Math.max(320, Math.floor(w / 2));
+      const height = Math.max(460, Math.floor(h));
+      return { width, height };
+    }
+
+    let pageFlip = null;
+
+    function initFlip(){
+      try{
+        if (!window.St || !window.St.PageFlip) {
+          toast("PageFlip library didn’t load. If you’re on mobile data, try again or switch network.");
+          return;
+        }
+
+        const bookEl = document.getElementById("book");
+        const { width, height } = calcSize();
+
+        pageFlip = new St.PageFlip(bookEl, {
+          width,
+          height,
+          size: "stretch",
+          autoSize: true,
+          maxShadowOpacity: 0.35,
+          showCover: true,
+          mobileScrollSupport: false,
+          useMouseEvents: true
+        });
+
+        pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
+      }catch(e){
+        console.error(e);
+        toast("Init failed. Open DevTools console to see the error.");
+      }
+    }
+
+    function openMagazine(){
+      document.getElementById("closedCover").style.display = "none";
+      document.getElementById("scene").classList.add("open");
+      if (!pageFlip) initFlip();
+    }
+
+    // attach AFTER DOM is ready
+    document.getElementById("closedCover").addEventListener("click", openMagazine);
+    document.getElementById("prevBtn").addEventListener("click", ()=> pageFlip && pageFlip.flipPrev());
+    document.getElementById("nextBtn").addEventListener("click", ()=> pageFlip && pageFlip.flipNext());
+
+    window.addEventListener("resize", ()=>{
+      if (!pageFlip) return;
+      const { width, height } = calcSize();
+      pageFlip.update({ width, height });
+    });
+  </script>
 </body>
 </html>
