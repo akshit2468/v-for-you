@@ -3,41 +3,89 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>For You ❤️</title>
+  <title>Valentine Week 💘</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+<body>
 
-<body class="theme-valentine fade-in">
-  <div class="bg" aria-hidden="true">
-    <div class="glow g1"></div>
-    <div class="glow g2"></div>
-    <div class="glow g3"></div>
-  </div>
-
+  <!-- floating hearts layer -->
   <div class="hearts" aria-hidden="true"></div>
 
-  <main class="stage">
-    <section class="screen">
-      <div class="topline">
-        <div class="tag">One second…</div>
-        <div class="daycount">❤️</div>
+  <main class="wrap">
+    <header class="hero">
+      <div class="pill">VALENTINE WEEK</div>
+      <h1 class="title">A tiny website for my girl 💗</h1>
+      <p class="subtitle">One day at a time. One smile at a time.</p>
+    </header>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Start here</h2>
+        <p>Open this first 👇</p>
       </div>
 
-      <h1 class="headline">Hey you 👀</h1>
-      <p class="line">I made something for you.</p>
-      <p class="hint">Tap to continue.</p>
-
-      <div class="actions">
-        <button class="btn" id="startBtn" type="button">Okay →</button>
+      <div class="grid one">
+        <a class="btn big primary" href="ask.html">
+          <span class="btnTitle">Ask Page</span>
+          <span class="btnSub">the funny “will you be my valentine?”</span>
+        </a>
       </div>
     </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Valentine Week pages</h2>
+        <p>Rose → Propose → Chocolate → Teddy → Promise → Hug → Kiss → Valentine</p>
+      </div>
+
+      <div class="grid">
+        <a class="btn" href="rose.html">
+          <span class="btnTitle">Rose Day 🌹</span>
+          <span class="btnSub">a little rose-y drama</span>
+        </a>
+
+        <a class="btn" href="propose.html">
+          <span class="btnTitle">Propose Day 💍</span>
+          <span class="btnSub">say yes pls</span>
+        </a>
+
+        <a class="btn" href="chocolate.html">
+          <span class="btnTitle">Chocolate Day 🍫</span>
+          <span class="btnSub">sweet like you</span>
+        </a>
+
+        <a class="btn" href="teddy.html">
+          <span class="btnTitle">Teddy Day 🧸</span>
+          <span class="btnSub">a cuddle in HTML</span>
+        </a>
+
+        <a class="btn" href="promise.html">
+          <span class="btnTitle">Promise Day 🤞</span>
+          <span class="btnSub">pinky promise energy</span>
+        </a>
+
+        <a class="btn" href="hug.html">
+          <span class="btnTitle">Hug Day 🤗</span>
+          <span class="btnSub">virtual squeeze</span>
+        </a>
+
+        <a class="btn" href="kiss.html">
+          <span class="btnTitle">Kiss Day 💋</span>
+          <span class="btnSub">mwah</span>
+        </a>
+
+        <a class="btn primary" href="valentine.html">
+          <span class="btnTitle">Valentine’s Day ❤️</span>
+          <span class="btnSub">the main event</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <span>Made with ❤️</span>
+    </footer>
   </main>
 
-  <script>
-    document.getElementById("startBtn").addEventListener("click", () => {
-      document.body.classList.add("fade-out");
-      setTimeout(() => { location.href = "ask.html"; }, 300);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
