@@ -1,28 +1,61 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Chocolate Day 🍫</title><link rel="stylesheet" href="styles.css"/>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Chocolate Day 🍫</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
-<body class="theme-chocolate" data-next="hug.html"
-data-lines='[
-  "Chocolate Day 🍫",
-  "Officially giving you extra sweetness today.",
-  "But honestly…",
-  "You’re already sweeter than chocolate."
-]'>
-<div class="bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
-<div class="hearts" aria-hidden="true"></div>
-<main class="stage">
-  <section class="screen">
-    <div class="topline"><div class="tag">Valentine Week</div><div class="daycount">Day 3 / 8</div></div>
-    <h1 class="headline">Hey <span id="name">Love</span> ❤️</h1>
-    <div class="subtitle">Chocolate Day 🍫</div>
 
-    <img class="bear" src="assets/bears/chocolate.gif" alt="chocolate day bear" />
+<body
+  class="theme-chocolate fade-in"
+  data-next="teddy.html"
+  data-next-label="Teddy Day →"
+  data-lines='[
+    "Chocolate Day 🍫",
+    "Officially giving you extra sweetness today.",
+    "But honestly…",
+    "You’re already sweeter than chocolate."
+  ]'
+>
 
-    <p class="line" id="line">Tap anywhere to begin.</p>
-    <p class="hint" id="hint">(Tap / Space / Enter)</p>
-    <div class="actions"><button class="btn" id="nextBtn" type="button">Continue →</button></div>
-  </section>
-</main>
-<script src="script.js"></script>
-</body></html>
+  <div class="bg" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
+  <div class="hearts" aria-hidden="true"></div>
+
+  <main class="stage">
+    <section class="screen">
+
+      <div class="topline">
+        <div class="tag">Valentine Week</div>
+        <div class="daycount">Day 3 / 8</div>
+      </div>
+
+      <h1 class="headline">Hey <span id="name">Love</span> ❤️</h1>
+      <div class="subtitle">Chocolate Day 🍫</div>
+
+      <img
+        class="bear"
+        src="assets/bears/chocolate.gif"
+        alt="chocolate day bear"
+      />
+
+      <p class="line" id="line">Tap anywhere to begin.</p>
+      <p class="hint" id="hint">(Tap / Space / Enter)</p>
+
+      <div class="actions">
+        <button class="btn" id="nextBtn" type="button">
+          Continue →
+        </button>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
