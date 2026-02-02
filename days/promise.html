@@ -1,113 +1,37 @@
-<!doctype html>
-<html lang="en"><head>
+<!doctype html><html><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Promise Day 🤞</title>
-<link rel="stylesheet" href="days.css"/>
 <style>
-  /* extra promise vibe - clean elegant "contract" with cute stamp */
-  .paper{
-    border-radius:26px;
-    background: rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.16);
-    padding:18px;
-    position:relative;
-    overflow:hidden;
-  }
-  .paper::before{
-    content:"";
-    position:absolute; inset:-2px;
-    background:
-      radial-gradient(900px 320px at 20% 0%, rgba(77,255,181,.14), transparent 60%),
-      radial-gradient(700px 320px at 80% 30%, rgba(255,122,166,.10), transparent 60%);
-    pointer-events:none;
-  }
-  .stamp{
-    display:inline-block;
-    padding:10px 12px;
-    border-radius:14px;
-    background: linear-gradient(90deg, rgba(77,255,181,.95), rgba(255,122,166,.75));
-    color:#06110d;
-    font-weight:950;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    font-size:12px;
-    box-shadow: 0 18px 40px rgba(0,0,0,.22);
-  }
-  .promiseList{
-    margin-top:12px;
-    display:grid;
-    gap:10px;
-  }
-  .pitem{
-    padding:14px 16px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.12);
-    line-height:1.6;
-    opacity:0;
-    transform: translateY(8px);
-    animation: pop .45s ease forwards;
-  }
-  .pitem:nth-child(2){animation-delay:.08s}
-  .pitem:nth-child(3){animation-delay:.16s}
-  .pitem:nth-child(4){animation-delay:.24s}
-  .pitem:nth-child(5){animation-delay:.32s}
+html,body{height:100%;margin:0}
+body{
+  overflow:hidden;display:grid;place-items:center;
+  font-family:system-ui;color:#fff;
+  background:linear-gradient(180deg,#05080f,#071a18);
+}
+.fall{position:fixed;inset:0;pointer-events:none}
+.f{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(120vh)}}
+.center{text-align:center}
+h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
+p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
 </style>
 </head>
-
-<body class="theme-promise" data-stickers="🤞,✨,❤️,🧡,💌,🌿">
-<div class="bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
-<div class="stickers" aria-hidden="true"></div>
-
-<main class="stage">
-  <section class="card">
-    <div class="inner">
-
-      <div>
-        <div class="topline">
-          <div class="pill">Valentine Week</div>
-          <div class="pill">Promise Day 🤞</div>
-        </div>
-
-        <h1 class="h1">A soft promise.</h1>
-        <p class="sub">Not big speeches. Just real things.</p>
-
-        <div class="paper">
-          <span class="stamp">PROMISE</span>
-
-          <div class="promiseList">
-            <div class="pitem">I’ll choose you — even on the hard days.</div>
-            <div class="pitem">I’ll listen properly, not just “hear”.</div>
-            <div class="pitem">I’ll protect your peace like it’s mine.</div>
-            <div class="pitem">I’ll be your safe place — always.</div>
-            <div class="pitem">And I’ll keep making you smile… shamelessly 😌</div>
-          </div>
-        </div>
-
-        <div class="footer">steady • loyal • yours</div>
-      </div>
-
-      <div class="right">
-        <div class="media">
-          <!-- Optional: if you have a promise gif/image -->
-          <img class="bear" src="assets/bears/promise.gif" alt="promise day" onerror="this.style.display='none'"/>
-          <div class="note" style="text-align:center; margin-top:8px; opacity:.9;">
-            🤞 (If no gif yet, still works.)
-          </div>
-        </div>
-
-        <div class="media">
-          <div class="small">tiny note</div>
-          <p class="note">
-            If you ever feel unsure, read this again.
-            I’m not going anywhere. ❤️
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-</main>
-
-<script src="days.js"></script>
+<body>
+<div class="fall" id="fall"></div>
+<div class="center">
+  <h1>I promise 🤞</h1>
+  <p>Always you</p>
+</div>
+<script>
+const icons=["🤞","✨","❤️","🌿"], f=document.getElementById("fall");
+function drop(){
+  const e=document.createElement("div");
+  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=18+Math.random()*26+"px";
+  e.style.animationDuration=7+Math.random()*8+"s";
+  f.appendChild(e); setTimeout(()=>e.remove(),16000);
+}
+setInterval(drop,520);
+</script>
 </body></html>
