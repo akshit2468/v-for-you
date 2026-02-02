@@ -3,12 +3,8 @@ let pageFlip = null;
 function $(id){ return document.getElementById(id); }
 
 function calcSize(){
-  const maxW = Math.min(920, window.innerWidth * 0.94);
-  const maxH = Math.min(640, window.innerHeight * 0.74);
-  return {
-    width: Math.max(320, Math.floor(maxW / 2)),
-    height: Math.max(460, Math.floor(maxH))
-  };
+  // fixed base size (we scale with CSS instead of resizing the flip engine mid-flip)
+  return { width: 460, height: 640 }; // single page width, full height
 }
 
 function initFlip(){
@@ -20,29 +16,30 @@ function initFlip(){
   pageFlip = new St.PageFlip(bookEl, {
     width,
     height,
+
+    // IMPORTANT: keep geometry stable
     size: "fixed",
     autoSize: false,
 
-    showCover: true,
+    // IMPORTANT: prevents the "shift to single cover" behavior
+    showCover: false,
 
     // smoother
     flippingTime: 1200,
     maxShadowOpacity: 0.18,
 
-    // CORNER ONLY (this helps the “break away” feel a lot)
+    // corner-only drag
     dragArea: 0.10,
 
     // avoid snap flips
     disableFlipByClick: true,
 
-    // input
     useMouseEvents: true,
     mobileScrollSupport: false
   });
 
   pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
 
-  // more deliberate swipe, fewer accidental micro-drags
   try { pageFlip.getFlipController().setSwipeDistance(60); } catch(e) {}
 }
 
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = $("nextBtn");
 
   if (closed) closed.addEventListener("click", openMagazine);
-
   if (prevBtn) prevBtn.addEventListener("click", () => pageFlip && pageFlip.flipPrev());
   if (nextBtn) nextBtn.addEventListener("click", () => pageFlip && pageFlip.flipNext());
 
@@ -68,11 +64,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!pageFlip) return;
     if (e.key === "ArrowLeft") pageFlip.flipPrev();
     if (e.key === "ArrowRight") pageFlip.flipNext();
-  });
-
-  window.addEventListener("resize", () => {
-    if (!pageFlip) return;
-    const { width, height } = calcSize();
-    pageFlip.update({ width, height });
   });
 });
