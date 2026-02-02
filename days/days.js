@@ -1,48 +1,48 @@
-// days.js — navigation across Valentine week pages (UPDATED with Teddy + Promise)
+const particleLayer = document.querySelector(".particles");
+const hero = document.querySelector("[data-hero]");
+const heroEmoji = document.querySelector(".heroEmoji");
+const heroImg = document.querySelector(".heroImg");
 
-const ORDER = [
-  "rose.html",
-  "propose.html",
-  "chocolate.html",
-  "teddy.html",
-  "promise.html",
-  "hug.html",
-  "kiss.html",
-  "valentine.html"
-];
+const stickerList = (document.body.getAttribute("data-particles") || "❤️,✨")
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
 
-function currentFile() {
-  const name = window.location.pathname.split("/").pop();
-  return name || ORDER[0];
+function spawnParticle() {
+  if (!particleLayer) return;
+  const p = document.createElement("div");
+  p.className = "p";
+  p.textContent = stickerList[Math.floor(Math.random() * stickerList.length)];
+  p.style.left = (Math.random() * 100) + "vw";
+  p.style.fontSize = (14 + Math.random() * 26) + "px";
+  p.style.opacity = (0.18 + Math.random() * 0.45).toFixed(2);
+  p.style.animationDuration = (7 + Math.random() * 8) + "s";
+  particleLayer.appendChild(p);
+  setTimeout(() => p.remove(), 17000);
 }
 
-function goTo(file) {
-  // keep navigation working on GitHub Pages in any repo path
-  const base = window.location.pathname.replace(/[^/]+$/, "");
-  window.location.href = base + file;
+for (let i = 0; i < 12; i++) setTimeout(spawnParticle, i * 160);
+setInterval(spawnParticle, 520);
+
+// hero re-pop on click
+function repop(el) {
+  if (!el) return;
+  el.style.animation = "none";
+  // force reflow
+  void el.offsetHeight;
+  el.style.animation = "";
 }
 
-function setupNav() {
-  const file = currentFile();
-  const idx = ORDER.indexOf(file);
-
-  // If page isn't in ORDER, do nothing
-  if (idx === -1) return;
-
-  // Buttons
-  document.querySelectorAll('[data-nav="back"]').forEach((btn) => {
-    btn.onclick = () => goTo(ORDER[Math.max(0, idx - 1)]);
-  });
-
-  document.querySelectorAll('[data-nav="next"]').forEach((btn) => {
-    btn.onclick = () => goTo(ORDER[Math.min(ORDER.length - 1, idx + 1)]);
-  });
-
-  // Keyboard arrows
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") goTo(ORDER[Math.max(0, idx - 1)]);
-    if (e.key === "ArrowRight") goTo(ORDER[Math.min(ORDER.length - 1, idx + 1)]);
+if (hero) {
+  hero.addEventListener("click", () => {
+    repop(heroEmoji);
+    repop(heroImg);
+    // burst particles
+    for (let i = 0; i < 10; i++) setTimeout(spawnParticle, i * 30);
+    // tiny shake
+    hero.animate(
+      [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }],
+      { duration: 220, easing: "ease-out" }
+    );
   });
 }
-
-document.addEventListener("DOMContentLoaded", setupNav);
