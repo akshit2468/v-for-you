@@ -8,12 +8,21 @@ body{
   font-family:system-ui;color:#fff;
   background:linear-gradient(180deg,#0a0610,#1a0612);
 }
-.fall{position:fixed;inset:0;pointer-events:none}
+.fall{position:fixed;inset:0;pointer-events:none;z-index:1}
 .f{position:absolute;top:-40px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(120vh)}}
-.center{text-align:center}
+.center{text-align:center;position:relative;z-index:2}
 h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
 p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
+.vid{
+  width:min(420px,88vw);
+  max-height:360px;
+  margin:18px auto 0;
+  border-radius:18px;
+  display:block;
+  background:rgba(0,0,0,.25);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
 </style>
 </head>
 <body>
@@ -22,7 +31,7 @@ p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
   <h1>Come here 🤗</h1>
   <p>This one’s a warm hug</p>
   <video class="vid" controls autoplay muted loop playsinline preload="auto">
-      <source src="/v-for-you/assets/me/hug.mp4?v=5" type="video/mp4">
+    <source src="/v-for-you/assets/me/hug.mp4?v=5" type="video/mp4">
   </video>
 </div>
 <script>
