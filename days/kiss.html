@@ -1,11 +1,18 @@
-<!doctype html><html><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Kiss Day 😘</title>
+
 <style>
 html,body{height:100%;margin:0}
 body{
-  overflow:hidden;display:grid;place-items:center;
-  font-family:system-ui;color:#fff;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  font-family:system-ui;
+  color:#fff;
   background:linear-gradient(180deg,#0b0610,#220711);
 }
 .fall{position:fixed;inset:0;pointer-events:none;z-index:1}
@@ -25,25 +32,35 @@ p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
 }
 </style>
 </head>
+
 <body>
 <div class="fall" id="fall"></div>
+
 <div class="center">
   <h1>One kiss 😘</h1>
   <p>Just for you</p>
-  <video class="vid" controls autoplay muted loop playsinline preload="auto">
-    <source src="/v-for-you/assets/me/kiss.mp4?v=5" type="video/mp4">
+
+  <video id="vid" class="vid" autoplay loop playsinline preload="auto">
+    <source src="/v-for-you/assets/me/kiss.mp4?v=6" type="video/mp4">
   </video>
 </div>
+
 <script>
+const v=document.getElementById("vid");
+if(v){v.muted=true;v.volume=0;v.play().catch(()=>{});}
+
 const icons=["💋","😘","❤️","✨"], f=document.getElementById("fall");
 function drop(){
   const e=document.createElement("div");
-  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
+  e.className="f";
+  e.textContent=icons[Math.random()*icons.length|0];
   e.style.left=Math.random()*100+"vw";
   e.style.fontSize=18+Math.random()*26+"px";
   e.style.animationDuration=6+Math.random()*7+"s";
-  f.appendChild(e); setTimeout(()=>e.remove(),15000);
+  f.appendChild(e);
+  setTimeout(()=>e.remove(),15000);
 }
 setInterval(drop,480);
 </script>
-</body></html>
+</body>
+</html>
