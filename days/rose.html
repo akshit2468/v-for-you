@@ -1,126 +1,68 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Rose Day 🌹</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rose Day 🌹</title>
 
-  <style>
-    /* ===== RESET ===== */
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{
-      margin:0;
-      overflow:hidden;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      color:#fff;
-      background:
-        radial-gradient(900px 520px at 20% 10%, rgba(255,61,110,.22), transparent 60%),
-        radial-gradient(700px 520px at 85% 40%, rgba(255,209,223,.14), transparent 60%),
-        linear-gradient(180deg,#06040a,#1a0612);
-    }
+<style>
+html,body{height:100%;margin:0}
+body{
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  font-family:system-ui;
+  color:#fff;
+  background:linear-gradient(180deg,#09040b,#1b0714);
+}
+.fall{position:fixed;inset:0;pointer-events:none;z-index:1}
+.f{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(120vh)}}
 
-    /* ===== FALLING ROSES ===== */
-    .petals{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:1;
-    }
-    .petal{
-      position:absolute;
-      top:-40px;
-      font-size: 22px;
-      opacity:.85;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
-      animation: fall linear forwards;
-    }
-    @keyframes fall{
-      to{
-        transform: translateY(120vh) rotate(25deg);
-      }
-    }
+.center{position:relative;z-index:2;text-align:center;padding:16px}
+h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
+p{margin-top:14px;font-size:clamp(18px,3vw,24px);opacity:.95}
 
-    /* ===== CENTER CONTENT ===== */
-    .wrap{
-      position:relative;
-      z-index:2;
-      height:100%;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:20px;
-    }
-
-    h1{
-      margin:0;
-      font-weight:900;
-      letter-spacing:-.04em;
-      font-size: clamp(48px, 9vw, 96px);
-      animation: fadeUp .8s ease forwards;
-    }
-
-    .sub{
-      margin-top:18px;
-      font-size: clamp(16px, 3vw, 22px);
-      letter-spacing:.02em;
-      color: rgba(255,246,250,.9);
-      animation: fadeUp .8s ease forwards;
-      animation-delay:.15s;
-      opacity:0;
-    }
-
-    .hint{
-      margin-top:30px;
-      font-size:12px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color: rgba(255,246,250,.75);
-      animation: fadeUp .8s ease forwards;
-      animation-delay:.3s;
-      opacity:0;
-    }
-
-    @keyframes fadeUp{
-      from{ transform: translateY(16px); opacity:0 }
-      to{ transform: translateY(0); opacity:1 }
-    }
-  </style>
+.vid{
+  width:min(420px,88vw);
+  max-height:360px;
+  margin:18px auto 0;
+  border-radius:18px;
+  display:block;
+  background:rgba(0,0,0,.25);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+</style>
 </head>
 
 <body>
+<div class="fall" id="fall"></div>
 
-  <!-- falling roses -->
-  <div class="petals" id="petals"></div>
+<div class="center">
+  <h1>For you 🌹</h1>
+  <p>One rose, all my feelings.</p>
 
-  <!-- main content -->
-  <main class="wrap">
-    <div>
-      <h1>For you 🌹</h1>
-      <div class="sub">Happy Rose Day</div>
-      <div class="hint">just breathe & smile</div>
-    </div>
-  </main>
+  <video id="vid" class="vid" autoplay loop playsinline preload="auto">
+    <source src="/v-for-you/assets/me/rose.mp4?v=6" type="video/mp4">
+  </video>
+</div>
 
-  <script>
-    const petals = document.getElementById("petals");
-    const icons = ["🌹","🌸","💗","✨"];
+<script>
+const v=document.getElementById("vid");
+if(v){v.muted=true;v.volume=0;v.play().catch(()=>{});}
 
-    function dropPetal(){
-      const p = document.createElement("div");
-      p.className = "petal";
-      p.textContent = icons[Math.floor(Math.random()*icons.length)];
-      p.style.left = Math.random()*100 + "vw";
-      p.style.fontSize = (16 + Math.random()*28) + "px";
-      p.style.opacity = (0.3 + Math.random()*0.6).toFixed(2);
-      p.style.animationDuration = (7 + Math.random()*8) + "s";
-      petals.appendChild(p);
-      setTimeout(()=>p.remove(), 16000);
-    }
-
-    for(let i=0;i<12;i++) setTimeout(dropPetal, i*180);
-    setInterval(dropPetal, 500);
-  </script>
-
+const icons=["🌹","❤️","✨","💗"], f=document.getElementById("fall");
+function drop(){
+  const e=document.createElement("div");
+  e.className="f";
+  e.textContent=icons[Math.random()*icons.length|0];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=18+Math.random()*26+"px";
+  e.style.animationDuration=6+Math.random()*7+"s";
+  f.appendChild(e);
+  setTimeout(()=>e.remove(),15000);
+}
+setInterval(drop,450);
+</script>
 </body>
 </html>
