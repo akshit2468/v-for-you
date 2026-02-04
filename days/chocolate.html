@@ -1,73 +1,60 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Chocolate Day 🍫</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Chocolate Day 🍫</title>
 
-<style>
-html,body{height:100%;margin:0}
-body{
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-  font-family:system-ui;
-  color:#fff;
-  background:linear-gradient(180deg,#0b0605,#1a0d08);
-}
+  <style>
+    html,body{height:100%;margin:0}
+    body{
+      overflow:hidden;display:grid;place-items:center;
+      font-family:system-ui;color:#fff;
+      background:linear-gradient(180deg,#0b0605,#1a0d08);
+    }
+    .fall{position:fixed;inset:0;pointer-events:none;z-index:1}
+    .f{position:absolute;top:-40px;animation:fall linear forwards}
+    @keyframes fall{to{transform:translateY(120vh)}}
 
-.fall{position:fixed;inset:0;pointer-events:none;z-index:1}
-.f{position:absolute;top:-40px;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(120vh)}}
+    .center{position:relative;z-index:2;text-align:center;padding:14px}
+    h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
+    p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
 
-.center{position:relative;z-index:2;text-align:center;padding:16px}
-h1{font-size:clamp(52px,9vw,96px);margin:0;font-weight:900}
-p{margin-top:14px;font-size:clamp(18px,3vw,24px)}
-
-.vid{
-  width:min(420px, 88vw);
-  max-height: 360px;
-  margin: 18px auto 0;
-  border-radius: 18px;
-  display:block;
-  background: rgba(0,0,0,.25);
-  box-shadow: 0 18px 40px rgba(0,0,0,.35);
-}
-</style>
+    .vid{
+      width:min(420px, 88vw);
+      max-height:360px;
+      margin:18px auto 0;
+      border-radius:18px;
+      display:block;
+      background:rgba(0,0,0,.25);
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+    }
+  </style>
 </head>
 
 <body>
-<div class="fall" id="fall"></div>
+  <div class="fall" id="fall"></div>
 
-<div class="center">
-  <h1>Sweet like you 🍫</h1>
-  <p>Happy Chocolate Day</p>
+  <div class="center">
+    <h1>Sweet like you 🍫</h1>
+    <p>Happy Chocolate Day</p>
 
-  <!-- ✅ video (with cache-buster + controls for testing) -->
-  <video id="chocoVid" class="vid" controls autoplay muted loop playsinline preload="auto">
-    <source src="assets/me/Chocolate(1).mp4?v=9" type="video/mp4">
-  </video>
+    <video class="vid" controls autoplay muted loop playsinline preload="auto">
+      <source src="/v-for-you/assets/me/chocolate.mp4?v=5" type="video/mp4">
+    </video>
+  </div>
 
-  <p style="opacity:.75;font-size:14px;margin-top:10px">
-    If video doesn’t start, press play once 🙂
-  </p>
-</div>
-
-<script>
-const icons=["🍫","🍬","✨","💗"], f=document.getElementById("fall");
-function drop(){
-  const e=document.createElement("div");
-  e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
-  e.style.left=Math.random()*100+"vw";
-  e.style.fontSize=18+Math.random()*28+"px";
-  e.style.animationDuration=6+Math.random()*7+"s";
-  f.appendChild(e); setTimeout(()=>e.remove(),15000);
-}
-setInterval(drop,450);
-
-// Force reload the video element (helps stubborn caching)
-const v = document.getElementById("chocoVid");
-if (v) v.load();
-</script>
+  <script>
+    const icons=["🍫","🍬","✨","💗"], f=document.getElementById("fall");
+    function drop(){
+      const e=document.createElement("div");
+      e.className="f"; e.textContent=icons[Math.random()*icons.length|0];
+      e.style.left=Math.random()*100+"vw";
+      e.style.fontSize=18+Math.random()*28+"px";
+      e.style.animationDuration=6+Math.random()*7+"s";
+      f.appendChild(e); setTimeout(()=>e.remove(),15000);
+    }
+    setInterval(drop,450);
+  </script>
 </body>
 </html>
