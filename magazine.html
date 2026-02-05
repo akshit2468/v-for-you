@@ -13,9 +13,14 @@
     :root{
       --bgA:#07040a;
       --bgB:#1a0612;
+
       --paper:#f6f1f4;
       --ink:#1a1417;
       --muted:#6f5e66;
+
+      --accent:#ff3d6e;
+      --accent2:#ff86b2;
+
       --shadow: 0 30px 90px rgba(0,0,0,.55);
       --radius:22px;
     }
@@ -24,15 +29,48 @@
     html,body{height:100%}
     body{
       margin:0;
-      background: radial-gradient(900px 520px at 25% 20%, rgba(255,61,110,.16), transparent 60%),
-                  radial-gradient(900px 560px at 80% 30%, rgba(255,134,178,.12), transparent 65%),
-                  linear-gradient(180deg,var(--bgA),var(--bgB));
+      background: linear-gradient(180deg,var(--bgA),var(--bgB));
       color:#fff;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       overflow:hidden;
     }
 
+    /* ===== Background particles canvas ===== */
+    #particles{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.95;
+    }
+
+    /* Soft glow blobs behind everything */
+    .glows{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute;
+      filter: blur(90px);
+      opacity:.40;
+      animation: floatGlow 10s ease-in-out infinite alternate;
+      transform: translate3d(0,0,0);
+    }
+    .g1{ width:620px;height:620px; left:-180px; top:-220px; background: color-mix(in srgb, var(--accent) 60%, transparent); }
+    .g2{ width:680px;height:680px; right:-220px; top:40px;  background: color-mix(in srgb, var(--accent2) 60%, transparent); animation-duration: 12s; }
+    .g3{ width:820px;height:820px; left:18%; bottom:-360px; background: color-mix(in srgb, var(--accent) 40%, transparent); animation-duration: 14s; }
+
+    @keyframes floatGlow{
+      from{ transform: translateY(0) translateX(0) scale(1); }
+      to{ transform: translateY(18px) translateX(10px) scale(1.03); }
+    }
+
     .wrap{
+      position:relative;
+      z-index:1;
       height:100%;
       display:grid;
       place-items:center;
@@ -54,7 +92,7 @@
       color:#fff;
       text-decoration:none;
       opacity:.9;
-      font-weight:700;
+      font-weight:800;
     }
     .topbar a:hover{opacity:1}
 
@@ -62,15 +100,17 @@
       font-weight:950;
       letter-spacing:-0.02em;
       font-size: clamp(18px, 2.4vw, 24px);
+      text-align:center;
     }
     .hint{
       font-size:12px;
       letter-spacing:.16em;
       text-transform:uppercase;
       opacity:.75;
+      text-align:center;
     }
 
-    /* Book container */
+    /* ===== Book shell with awesome glow ===== */
     .book-shell{
       width:min(1100px, 96vw);
       height:min(700px, 78vh);
@@ -78,20 +118,56 @@
       position:relative;
       box-shadow: var(--shadow);
       background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
+      isolation:isolate;
     }
 
-    /* The flipbook mount */
+    /* outer animated glow ring */
+    .book-shell::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: calc(var(--radius) + 2px);
+      background:
+        radial-gradient(700px 300px at 20% 0%, rgba(255,61,110,.25), transparent 60%),
+        radial-gradient(700px 320px at 85% 30%, rgba(255,134,178,.18), transparent 62%),
+        linear-gradient(90deg, rgba(255,61,110,.12), rgba(255,134,178,.10));
+      filter: blur(12px);
+      opacity:.9;
+      z-index:-1;
+      animation: glowPulse 3.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse{
+      from{ opacity:.65; transform: scale(1); }
+      to{ opacity:1; transform: scale(1.01); }
+    }
+
+    /* inner glass sheen */
+    .book-shell::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: var(--radius);
+      background: radial-gradient(900px 420px at 50% -20%, rgba(255,255,255,.10), transparent 55%);
+      pointer-events:none;
+      z-index:2;
+      mix-blend-mode: screen;
+      opacity:.55;
+    }
+
     #book{
       width:100%;
       height:100%;
       display:grid;
       place-items:center;
-      touch-action: pan-y; /* smoother mobile swipe */
+      touch-action: pan-y;
+      position:relative;
+      z-index:1;
     }
 
-    /* Page content */
+    /* ===== Page content ===== */
     .page{
       background: var(--paper);
       color: var(--ink);
@@ -112,22 +188,22 @@
       opacity:.35;
     }
 
-    .page .kicker{
+    .kicker{
       font-size:12px;
       letter-spacing:.18em;
       text-transform:uppercase;
       color: var(--muted);
-      font-weight:800;
+      font-weight:900;
     }
 
-    .page h2{
+    h2{
       margin:10px 0 12px;
       font-size: clamp(26px, 3vw, 40px);
       letter-spacing:-0.02em;
       line-height:1.1;
     }
 
-    .page p{
+    p{
       margin: 0 0 10px;
       font-size: 16px;
       line-height: 1.7;
@@ -147,72 +223,61 @@
       background: rgba(0,0,0,.06);
       border:1px solid rgba(0,0,0,.08);
       color:#3a2f35;
-      font-weight:800;
+      font-weight:900;
     }
 
-    .photo{
+    /* ===== Images on cover/end ===== */
+    .heroimg{
       width:100%;
-      height: calc(100% - 84px);
+      height: calc(100% - 120px);
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(255,61,110,.22), rgba(0,0,0,.05));
-      border:1px solid rgba(0,0,0,.10);
-      display:grid;
-      place-items:center;
       overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.30);
       position:relative;
     }
-    .photo img{
+    .heroimg img{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
     }
-    .photo .label{
-      position:absolute;
-      bottom:14px;
-      left:14px;
-      background: rgba(255,255,255,.78);
-      border:1px solid rgba(0,0,0,.08);
-      padding:10px 12px;
-      border-radius: 14px;
-      font-weight:900;
-      color:#211a1e;
-    }
 
-    /* Cover styling */
+    /* ===== Cover styling ===== */
     .cover{
       background: radial-gradient(800px 520px at 20% 0%, rgba(255,61,110,.35), transparent 60%),
                   radial-gradient(820px 540px at 80% 30%, rgba(255,134,178,.25), transparent 70%),
                   linear-gradient(160deg,#1a0714,#08040b);
       color:#fff;
-      padding: 30px;
+      padding: 22px;
       display:flex;
       flex-direction:column;
-      justify-content:space-between;
+      gap:14px;
     }
-    .cover .brand{
+    .brand{
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
       font-size:12px;
-      opacity:.85;
+      opacity:.88;
     }
-    .cover .big{
-      font-size: clamp(36px, 4.2vw, 58px);
+    .big{
+      font-size: clamp(34px, 4.2vw, 56px);
       font-weight: 950;
       line-height:1.02;
       letter-spacing:-0.03em;
-      margin:12px 0 0;
+      margin:0;
+      text-shadow: 0 12px 30px rgba(0,0,0,.35);
     }
-    .cover .sub{
-      opacity:.88;
-      margin-top:10px;
+    .sub{
+      opacity:.92;
       font-size: 16px;
       line-height: 1.5;
-      max-width: 34ch;
+      max-width: 42ch;
+      margin:0;
     }
-    .cover .tap{
-      margin-top:18px;
+    .tap{
       display:inline-flex;
       gap:10px;
       align-items:center;
@@ -220,8 +285,9 @@
       border:1px solid rgba(255,255,255,.14);
       padding: 12px 14px;
       border-radius: 16px;
-      font-weight:900;
+      font-weight:950;
       width:max-content;
+      box-shadow: 0 14px 30px rgba(0,0,0,.20);
     }
 
     .footer-note{
@@ -230,15 +296,23 @@
       font-size:12px;
       opacity:.7;
       user-select:none;
+      position:relative;
+      z-index:1;
     }
 
-    /* subtle fade-in */
     .fade-in{ animation: in .35s ease both; }
     @keyframes in{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
   </style>
 </head>
 
 <body class="fade-in">
+  <canvas id="particles"></canvas>
+  <div class="glows" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
   <div class="wrap">
     <div class="topbar">
       <a href="valentine.html">← back</a>
@@ -246,27 +320,32 @@
         <div class="title">Mini Magazine</div>
         <div class="hint">click cover • drag corner • swipe • arrows</div>
       </div>
-      <div style="opacity:.8;font-weight:800">💞</div>
+      <div style="opacity:.85;font-weight:900">💞</div>
     </div>
 
     <div class="book-shell">
       <div id="book"></div>
     </div>
 
-    <div class="footer-note">Tip: use the corner to turn pages (feels nicer than dragging the middle)</div>
+    <div class="footer-note">Tip: drag the corner to turn pages (feels nicer than dragging the middle)</div>
   </div>
 
   <script>
-    // --- PAGES (edit text/images here) ---
-    // Put your images in /assets/mag/ and update filenames below.
-    // Example: /v-for-you/assets/mag/p1.jpg
-    const magImages = {
-      p1: "/v-for-you/assets/mag/photo1.jpg",
-      p2: "/v-for-you/assets/mag/photo2.jpg",
-      p3: "/v-for-you/assets/mag/photo3.jpg",
-      p4: "/v-for-you/assets/mag/photo4.jpg",
-    };
+    /* ===============================
+       CONFIG: your cover/end images
+       =============================== */
+    const coverImage = "assets/magazine/cover.png"; // <-- put your cover.png here
+    const endImage   = "assets/magazine/end.png";   // <-- put your end.png here
 
+    /* ===============================
+       Pages (order matters!)
+       0: Cover
+       1: Contents
+       2: Editor
+       3: Highlights
+       ...
+       last: End cover
+       =============================== */
     function pageHTML(html, extraClass=""){
       const el = document.createElement("div");
       el.className = `page ${extraClass}`.trim();
@@ -276,20 +355,22 @@
 
     const pages = [];
 
-    // Cover (front)
+    // Cover (front) — with image
     pages.push(pageHTML(`
       <div class="cover">
-        <div>
-          <div class="brand">For you • Valentine Special</div>
-          <div class="big">A tiny magazine<br>made with ❤️</div>
-          <div class="sub">Open it when you’re free. No pressure. Just vibes.</div>
-          <div class="tap">Tap / click to open →</div>
+        <div class="brand">For you • Valentine Special</div>
+        <h1 class="big">A tiny magazine<br>made with ❤️</h1>
+        <p class="sub">Open it when you’re free. No pressure. Just vibes.</p>
+
+        <div class="heroimg">
+          <img src="${coverImage}" alt="Cover image" />
         </div>
-        <div style="opacity:.85;font-weight:800">Issue #1 • 2026</div>
+
+        <div class="tap">Tap / click to open →</div>
       </div>
     `, "cover"));
 
-    // Inside cover (contents)
+    // Contents
     pages.push(pageHTML(`
       <div class="kicker">Contents</div>
       <h2>What’s inside</h2>
@@ -325,23 +406,15 @@
       <p style="margin-top:14px;color:#3b3036">Okay stop, I’ll write a whole book.</p>
     `));
 
-    // Photo spread page 1
+    // Photo spread page 1 (placeholder)
     pages.push(pageHTML(`
       <div class="kicker">Photo spread</div>
       <h2>Us (or you)</h2>
-      <div class="photo">
-        <img src="${magImages.p1}" alt="photo 1" onerror="this.remove();">
-        <div class="label">Drop a photo here → /assets/mag/photo1.jpg</div>
-      </div>
-    `));
-
-    // Photo spread page 2
-    pages.push(pageHTML(`
-      <div class="kicker">Photo spread</div>
-      <h2>More cute evidence</h2>
-      <div class="photo">
-        <img src="${magImages.p2}" alt="photo 2" onerror="this.remove();">
-        <div class="label">/assets/mag/photo2.jpg</div>
+      <p style="color:#3b3036">Drop your photos in <b>assets/mag/</b> and I’ll wire them in next.</p>
+      <div class="chips" style="margin-top:10px">
+        <div class="chip">photo1.jpg</div>
+        <div class="chip">photo2.jpg</div>
+        <div class="chip">photo3.jpg</div>
       </div>
     `));
 
@@ -362,25 +435,26 @@
       <p style="margin-top:14px;color:#3b3036"><b>Now:</b> come take your hug.</p>
     `));
 
-    // Back cover
+    // End cover — with image
     pages.push(pageHTML(`
       <div class="cover" style="justify-content:center; text-align:center;">
-        <div class="big" style="margin:0;">The End</div>
-        <div class="sub" style="margin:16px auto 0;">But not really 😌</div>
+        <h2 class="big" style="margin:0;">The End</h2>
+        <p class="sub" style="margin:12px auto 18px;">But not really 😌</p>
+        <div class="heroimg" style="height:70%;">
+          <img src="${endImage}" alt="End image" />
+        </div>
       </div>
     `, "cover"));
 
-    // --- INIT BOOK ---
+    // Mount
     const bookEl = document.getElementById("book");
-
-    // Create the HTML element expected by PageFlip
     const container = document.createElement("div");
     container.id = "flipbook";
     container.style.width = "100%";
     container.style.height = "100%";
     bookEl.appendChild(container);
 
-    // IMPORTANT: smoother + less “tearing” feel
+    // Flip settings (smooth + stable)
     const pageFlip = new St.PageFlip(container, {
       width: 520,
       height: 660,
@@ -389,29 +463,32 @@
       maxWidth: 1100,
       minHeight: 420,
       maxHeight: 760,
+
       showCover: true,
       mobileScrollSupport: false,
       useMouseEvents: true,
 
-      // smoothness knobs:
-      flippingTime: 850,
+      // smoother turning:
+      flippingTime: 900,
       maxShadowOpacity: 0.35,
 
-      // stability knobs:
+      // stability:
       disableFlipByClick: false,
-      swipeDistance: 18,
+      swipeDistance: 20,
       startZIndex: 10
     });
 
     pageFlip.loadFromHTML(pages);
 
-    // Start "closed": show cover only (page 0)
+    // Start closed (show cover)
     pageFlip.turnToPage(0);
 
-    // Click cover to open (go to first spread)
+    // IMPORTANT FIX:
+    // If cover is page 0, opening should go to page 1 (Contents),
+    // not jump further.
     container.addEventListener("click", () => {
       if (pageFlip.getCurrentPageIndex() === 0) {
-        pageFlip.flipNext();
+        pageFlip.turnToPage(1);
       }
     });
 
@@ -421,6 +498,66 @@
       if (e.key === "ArrowLeft") pageFlip.flipPrev();
       if (e.key === "Escape") window.location.href = "valentine.html";
     });
+
+    /* ===============================
+       Flowing particles background
+       =============================== */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+
+    let W=0,H=0, DPR=1;
+    function resize(){
+      DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    const rand = (a,b)=>a+Math.random()*(b-a);
+
+    const particles = Array.from({length: 70}, () => ({
+      x: rand(0,W),
+      y: rand(0,H),
+      r: rand(0.9, 2.8)*DPR,
+      vx: rand(-0.18, 0.18)*DPR,
+      vy: rand(-0.30, -0.08)*DPR,
+      a: rand(0.10, 0.30),
+      hue: Math.random() < 0.6 ? 340 : 320 // pink-ish
+    }));
+
+    function step(){
+      ctx.clearRect(0,0,W,H);
+
+      // soft background haze
+      const g = ctx.createRadialGradient(W*0.25,H*0.2, 0, W*0.25,H*0.2, Math.min(W,H)*0.55);
+      g.addColorStop(0, "rgba(255,61,110,0.06)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      for (const p of particles){
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // slight wave drift
+        p.x += Math.sin((p.y / 220) + performance.now()/1800) * 0.06 * DPR;
+
+        if (p.y < -30*DPR) { p.y = H + rand(0,120*DPR); p.x = rand(0,W); }
+        if (p.x < -40*DPR) p.x = W + 40*DPR;
+        if (p.x > W + 40*DPR) p.x = -40*DPR;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 95%, 70%, ${p.a})`;
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(step);
+    }
+    step();
   </script>
 </body>
 </html>
