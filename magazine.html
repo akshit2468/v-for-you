@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mini Magazine 💌</title>
 
-  <!-- PageFlip (StPageFlip) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/page-flip/dist/css/page-flip.css">
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 
@@ -13,14 +12,11 @@
     :root{
       --bgA:#07040a;
       --bgB:#1a0612;
-
       --paper:#f6f1f4;
       --ink:#1a1417;
       --muted:#6f5e66;
-
       --accent:#ff3d6e;
       --accent2:#ff86b2;
-
       --shadow: 0 30px 90px rgba(0,0,0,.55);
       --radius:22px;
     }
@@ -35,7 +31,7 @@
       overflow:hidden;
     }
 
-    /* ===== Background particles canvas ===== */
+    /* background particles */
     #particles{
       position:fixed;
       inset:0;
@@ -44,7 +40,7 @@
       opacity:.95;
     }
 
-    /* Soft glow blobs behind everything */
+    /* glow blobs */
     .glows{
       position:fixed;
       inset:0;
@@ -59,10 +55,9 @@
       animation: floatGlow 10s ease-in-out infinite alternate;
       transform: translate3d(0,0,0);
     }
-    .g1{ width:620px;height:620px; left:-180px; top:-220px; background: color-mix(in srgb, var(--accent) 60%, transparent); }
-    .g2{ width:680px;height:680px; right:-220px; top:40px;  background: color-mix(in srgb, var(--accent2) 60%, transparent); animation-duration: 12s; }
-    .g3{ width:820px;height:820px; left:18%; bottom:-360px; background: color-mix(in srgb, var(--accent) 40%, transparent); animation-duration: 14s; }
-
+    .g1{ width:620px;height:620px; left:-180px; top:-220px; background: rgba(255,61,110,.55); }
+    .g2{ width:680px;height:680px; right:-220px; top:40px;  background: rgba(255,134,178,.45); animation-duration: 12s; }
+    .g3{ width:820px;height:820px; left:18%; bottom:-360px; background: rgba(255,61,110,.35); animation-duration: 14s; }
     @keyframes floatGlow{
       from{ transform: translateY(0) translateX(0) scale(1); }
       to{ transform: translateY(18px) translateX(10px) scale(1.03); }
@@ -87,7 +82,6 @@
       opacity:.92;
       user-select:none;
     }
-
     .topbar a{
       color:#fff;
       text-decoration:none;
@@ -110,7 +104,7 @@
       text-align:center;
     }
 
-    /* ===== Book shell with awesome glow ===== */
+    /* book shell + glow ring */
     .book-shell{
       width:min(1100px, 96vw);
       height:min(700px, 78vh);
@@ -122,8 +116,6 @@
       overflow:hidden;
       isolation:isolate;
     }
-
-    /* outer animated glow ring */
     .book-shell::before{
       content:"";
       position:absolute;
@@ -138,13 +130,10 @@
       z-index:-1;
       animation: glowPulse 3.8s ease-in-out infinite alternate;
     }
-
     @keyframes glowPulse{
       from{ opacity:.65; transform: scale(1); }
       to{ opacity:1; transform: scale(1.01); }
     }
-
-    /* inner glass sheen */
     .book-shell::after{
       content:"";
       position:absolute;
@@ -167,17 +156,16 @@
       z-index:1;
     }
 
-    /* ===== Page content ===== */
+    /* page base */
     .page{
       background: var(--paper);
       color: var(--ink);
       width:100%;
       height:100%;
-      padding: 26px 26px;
+      padding: 26px;
       position:relative;
       overflow:hidden;
     }
-
     .page::after{
       content:"";
       position:absolute;
@@ -195,21 +183,18 @@
       color: var(--muted);
       font-weight:900;
     }
-
     h2{
       margin:10px 0 12px;
       font-size: clamp(26px, 3vw, 40px);
       letter-spacing:-0.02em;
       line-height:1.1;
     }
-
     p{
       margin: 0 0 10px;
       font-size: 16px;
       line-height: 1.7;
       color:#2b2327;
     }
-
     .chips{
       display:flex;
       flex-wrap:wrap;
@@ -226,68 +211,17 @@
       font-weight:900;
     }
 
-    /* ===== Images on cover/end ===== */
-    .heroimg{
-      width:100%;
-      height: calc(100% - 120px);
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      box-shadow: 0 18px 40px rgba(0,0,0,.30);
-      position:relative;
+    /* FULL PAGE IMAGE PAGES */
+    .fullimg{
+      padding:0 !important;
+      background:#000;
     }
-    .heroimg img{
+    .fullimg::after{ display:none; }
+    .fullimg img{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
-    }
-
-    /* ===== Cover styling ===== */
-    .cover{
-      background: radial-gradient(800px 520px at 20% 0%, rgba(255,61,110,.35), transparent 60%),
-                  radial-gradient(820px 540px at 80% 30%, rgba(255,134,178,.25), transparent 70%),
-                  linear-gradient(160deg,#1a0714,#08040b);
-      color:#fff;
-      padding: 22px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .brand{
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:12px;
-      opacity:.88;
-    }
-    .big{
-      font-size: clamp(34px, 4.2vw, 56px);
-      font-weight: 950;
-      line-height:1.02;
-      letter-spacing:-0.03em;
-      margin:0;
-      text-shadow: 0 12px 30px rgba(0,0,0,.35);
-    }
-    .sub{
-      opacity:.92;
-      font-size: 16px;
-      line-height: 1.5;
-      max-width: 42ch;
-      margin:0;
-    }
-    .tap{
-      display:inline-flex;
-      gap:10px;
-      align-items:center;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-weight:950;
-      width:max-content;
-      box-shadow: 0 14px 30px rgba(0,0,0,.20);
     }
 
     .footer-note{
@@ -331,21 +265,10 @@
   </div>
 
   <script>
-    /* ===============================
-       CONFIG: your cover/end images
-       =============================== */
-    const coverImage = "assets/magazine/cover.png"; // <-- put your cover.png here
-    const endImage   = "assets/magazine/end.png";   // <-- put your end.png here
+    /* Put your images here */
+    const coverImage = "assets/magazine/cover.png";
+    const endImage   = "assets/magazine/end.png";
 
-    /* ===============================
-       Pages (order matters!)
-       0: Cover
-       1: Contents
-       2: Editor
-       3: Highlights
-       ...
-       last: End cover
-       =============================== */
     function pageHTML(html, extraClass=""){
       const el = document.createElement("div");
       el.className = `page ${extraClass}`.trim();
@@ -355,20 +278,10 @@
 
     const pages = [];
 
-    // Cover (front) — with image
+    // ✅ FULL COVER IMAGE page
     pages.push(pageHTML(`
-      <div class="cover">
-        <div class="brand">For you • Valentine Special</div>
-        <h1 class="big">A tiny magazine<br>made with ❤️</h1>
-        <p class="sub">Open it when you’re free. No pressure. Just vibes.</p>
-
-        <div class="heroimg">
-          <img src="${coverImage}" alt="Cover image" />
-        </div>
-
-        <div class="tap">Tap / click to open →</div>
-      </div>
-    `, "cover"));
+      <img src="${coverImage}" alt="Cover">
+    `, "fullimg"));
 
     // Contents
     pages.push(pageHTML(`
@@ -406,16 +319,11 @@
       <p style="margin-top:14px;color:#3b3036">Okay stop, I’ll write a whole book.</p>
     `));
 
-    // Photo spread page 1 (placeholder)
+    // Placeholder photo spread page
     pages.push(pageHTML(`
       <div class="kicker">Photo spread</div>
-      <h2>Us (or you)</h2>
-      <p style="color:#3b3036">Drop your photos in <b>assets/mag/</b> and I’ll wire them in next.</p>
-      <div class="chips" style="margin-top:10px">
-        <div class="chip">photo1.jpg</div>
-        <div class="chip">photo2.jpg</div>
-        <div class="chip">photo3.jpg</div>
-      </div>
+      <h2>Photo pages next</h2>
+      <p style="color:#3b3036">When you’re ready, tell me how many photos you want in the magazine and I’ll add proper full-photo spreads.</p>
     `));
 
     // Promise page
@@ -435,16 +343,10 @@
       <p style="margin-top:14px;color:#3b3036"><b>Now:</b> come take your hug.</p>
     `));
 
-    // End cover — with image
+    // ✅ FULL END IMAGE page
     pages.push(pageHTML(`
-      <div class="cover" style="justify-content:center; text-align:center;">
-        <h2 class="big" style="margin:0;">The End</h2>
-        <p class="sub" style="margin:12px auto 18px;">But not really 😌</p>
-        <div class="heroimg" style="height:70%;">
-          <img src="${endImage}" alt="End image" />
-        </div>
-      </div>
-    `, "cover"));
+      <img src="${endImage}" alt="End">
+    `, "fullimg"));
 
     // Mount
     const bookEl = document.getElementById("book");
@@ -454,7 +356,6 @@
     container.style.height = "100%";
     bookEl.appendChild(container);
 
-    // Flip settings (smooth + stable)
     const pageFlip = new St.PageFlip(container, {
       width: 520,
       height: 660,
@@ -468,11 +369,8 @@
       mobileScrollSupport: false,
       useMouseEvents: true,
 
-      // smoother turning:
       flippingTime: 900,
       maxShadowOpacity: 0.35,
-
-      // stability:
       disableFlipByClick: false,
       swipeDistance: 20,
       startZIndex: 10
@@ -480,28 +378,23 @@
 
     pageFlip.loadFromHTML(pages);
 
-    // Start closed (show cover)
+    // Start closed on cover
     pageFlip.turnToPage(0);
 
-    // IMPORTANT FIX:
-    // If cover is page 0, opening should go to page 1 (Contents),
-    // not jump further.
+    // Click cover -> open to Contents (page 1)
     container.addEventListener("click", () => {
       if (pageFlip.getCurrentPageIndex() === 0) {
         pageFlip.turnToPage(1);
       }
     });
 
-    // Keyboard nav
     document.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") pageFlip.flipNext();
       if (e.key === "ArrowLeft") pageFlip.flipPrev();
       if (e.key === "Escape") window.location.href = "valentine.html";
     });
 
-    /* ===============================
-       Flowing particles background
-       =============================== */
+    /* Flowing particles */
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
 
@@ -517,32 +410,20 @@
     resize();
 
     const rand = (a,b)=>a+Math.random()*(b-a);
-
     const particles = Array.from({length: 70}, () => ({
-      x: rand(0,W),
-      y: rand(0,H),
+      x: rand(0,W), y: rand(0,H),
       r: rand(0.9, 2.8)*DPR,
       vx: rand(-0.18, 0.18)*DPR,
       vy: rand(-0.30, -0.08)*DPR,
       a: rand(0.10, 0.30),
-      hue: Math.random() < 0.6 ? 340 : 320 // pink-ish
+      hue: Math.random() < 0.6 ? 340 : 320
     }));
 
     function step(){
       ctx.clearRect(0,0,W,H);
-
-      // soft background haze
-      const g = ctx.createRadialGradient(W*0.25,H*0.2, 0, W*0.25,H*0.2, Math.min(W,H)*0.55);
-      g.addColorStop(0, "rgba(255,61,110,0.06)");
-      g.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-
       for (const p of particles){
         p.x += p.vx;
         p.y += p.vy;
-
-        // slight wave drift
         p.x += Math.sin((p.y / 220) + performance.now()/1800) * 0.06 * DPR;
 
         if (p.y < -30*DPR) { p.y = H + rand(0,120*DPR); p.x = rand(0,W); }
@@ -554,7 +435,6 @@
         ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
         ctx.fill();
       }
-
       requestAnimationFrame(step);
     }
     step();
