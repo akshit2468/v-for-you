@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For You ❤️</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="theme-valentine fade-in">
+  <div class="bg" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
+  <div class="hearts" aria-hidden="true"></div>
+
+  <main class="stage">
+    <section class="screen">
+      <div class="topline">
+        <div class="tag">One second…</div>
+        <div class="daycount">❤️</div>
+      </div>
+
+      <h1 class="headline">Oye cutipie 👀</h1>
+      <p class="line">Check this out 😋</p>
+      <p class="hint">Tap to continue.</p>
+
+      <div class="actions">
+        <button class="btn" id="startBtn" type="button">Less goo →</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.body.classList.add("fade-out");
+      setTimeout(() => { location.href = "ask.html"; }, 300);
+    });
+  </script>
+</body>
+</html>
