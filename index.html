@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Vibe On 🎶</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body class="theme-valentine fade-in">
+  <div class="bg" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+  <div class="hearts" aria-hidden="true"></div>
+
+  <main class="stage">
+    <section class="screen">
+      <div class="topline">
+        <div class="tag">Before we begin…</div>
+        <div class="daycount">🎶</div>
+      </div>
+
+      <h1 class="headline">Let’s turn the vibe on.</h1>
+      <p class="line">One tap, and the music stays with you.</p>
+      <p class="hint">(Phones need one tap to allow background music)</p>
+
+      <div class="actions">
+        <button class="btn" id="vibeBtn" type="button">Vibe on →</button>
+        <button class="btn ghost" id="skipBtn" type="button">No music</button>
+      </div>
+    </section>
+  </main>
+
+  <audio id="bgm" preload="auto" loop>
+    <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const audio = document.getElementById("bgm");
+    const vibeBtn = document.getElementById("vibeBtn");
+    const skipBtn = document.getElementById("skipBtn");
+
+    // restore last progress if available
+    const savedTime = parseFloat(localStorage.getItem("bgm_time") || "0");
+    if (!isNaN(savedTime) && savedTime > 0) audio.currentTime = savedTime;
+
+    audio.volume = 0.6;
+
+    function go(){
+      document.body.classList.add("fade-out");
+      setTimeout(() => { location.href = "index.html"; }, 280);
+    }
+
+    vibeBtn.addEventListener("click", async () => {
+      try {
+        await audio.play();
+        localStorage.setItem("bgm_on", "1");
+        localStorage.setItem("bgm_time", String(audio.currentTime || 0));
+        go();
+      } catch {
+        // if still blocked (rare), just continue
+        localStorage.setItem("bgm_on", "0");
+        go();
+      }
+    });
+
+    skipBtn.addEventListener("click", () => {
+      localStorage.setItem("bgm_on", "0");
+      localStorage.setItem("bgm_time", "0");
+      go();
+    });
+
+    // hearts (reuse the same effect)
+    const heartsLayer = document.querySelector(".hearts");
+    function spawnHeart(){
+      if (!heartsLayer) return;
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = `${Math.random() * 100}vw`;
+      const size = 10 + Math.random() * 16;
+      h.style.width = `${size}px`;
+      h.style.height = `${size}px`;
+      const colors = ["#ff3d6e","#ff86b2","#ffd1df","#ffffff"];
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
+      const duration = 6 + Math.random() * 6;
+      h.style.animationDuration = `${duration}s`;
+      h.style.opacity = (0.22 + Math.random() * 0.55).toFixed(2);
+      heartsLayer.appendChild(h);
+      setTimeout(() => h.remove(), duration * 1000);
+    }
+    setInterval(spawnHeart, 420);
+  </script>
+</body>
+</html>
