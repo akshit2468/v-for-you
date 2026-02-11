@@ -28,7 +28,6 @@
 
       <div class="actions">
         <button class="btn" id="vibeBtn" type="button">VIBE ON</button>
-        <button class="btn ghost" id="skipBtn" type="button">No music</button>
       </div>
     </section>
   </main>
@@ -40,7 +39,6 @@
   <script>
     const audio = document.getElementById("bgm");
     const vibeBtn = document.getElementById("vibeBtn");
-    const skipBtn = document.getElementById("skipBtn");
 
     // restore last progress if available
     const savedTime = parseFloat(localStorage.getItem("bgm_time") || "0");
@@ -64,12 +62,6 @@
         localStorage.setItem("bgm_on", "0");
         go();
       }
-    });
-
-    skipBtn.addEventListener("click", () => {
-      localStorage.setItem("bgm_on", "0");
-      localStorage.setItem("bgm_time", "0");
-      go();
     });
 
     // hearts (reuse the same effect)
