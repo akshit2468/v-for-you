@@ -14,7 +14,7 @@
   <div class="hearts" aria-hidden="true"></div>
 
   <main class="stage">
-    <section class="screen">
+    <section class="screen" id="card">
       <div class="topline">
         <div class="tag">Incoming Question</div>
         <div class="daycount">Question Time</div>
@@ -32,10 +32,9 @@
         <button class="btn" id="continueBtn" type="button">Continue</button>
       </div>
 
-      <div class="actions" id="choiceRow" style="display:none;">
+      <div class="actions" id="choiceRow" style="display:none; position:relative;">
         <button class="btn" id="yesBtn" type="button">Yes 😌❤️</button>
-
-        <button class="btn ghost" id="noBtn" type="button">No 🙄</button>
+        <button class="btn ghost" id="noBtn" type="button" style="position:relative;">No 🙄</button>
       </div>
 
       <p class="hint" id="noHint" style="display:none; margin-top:14px;">
@@ -63,6 +62,7 @@
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const noHint = document.getElementById("noHint");
+    const card = document.getElementById("card");
 
     let idx = 0;
     let navigating = false;
@@ -90,12 +90,34 @@
       }
     });
 
-    // funny NO behavior
+    // funny NO behavior (runs FARTHER, stays inside card)
     let noCount = 0;
+
     function moveNoButton(){
-      const x = (Math.random() * 80) - 40;
-      const y = (Math.random() * 30) - 15;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      if (!card) return;
+
+      // make it absolute so we can place it anywhere
+      noBtn.style.position = "absolute";
+      noBtn.style.left = "0px";
+      noBtn.style.top = "0px";
+      noBtn.style.transform = "none";
+
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // padding so it doesn't touch edges
+      const pad = 18;
+
+      const maxX = Math.max(pad, cardRect.width - btnRect.width - pad);
+      const maxY = Math.max(pad, cardRect.height - btnRect.height - pad);
+
+      // random position inside the card
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
+
+      // place relative to the card
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
     }
 
     noBtn.addEventListener("click", () => {
@@ -116,6 +138,10 @@
         noBtn.disabled = true;
       }
     });
+
+    // also dodge on hover (desktop) + touchstart (mobile) to feel faster
+    noBtn.addEventListener("mouseenter", () => { if (!noBtn.disabled) moveNoButton(); });
+    noBtn.addEventListener("touchstart", () => { if (!noBtn.disabled) moveNoButton(); }, {passive:true});
 
     yesBtn.addEventListener("click", () => {
       if (navigating) return;
@@ -150,11 +176,10 @@
     }
     setInterval(spawnHeart, 420);
   </script>
-  
+
   <audio id="bgm" preload="auto" loop>
     <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
   </audio>
-  
   <script src="music.js"></script>
 
 </body>
