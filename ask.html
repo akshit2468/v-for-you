@@ -1,131 +1,214 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Question 💘</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* Keep the runaway button INSIDE the card */
-    .screen{ position:relative; overflow:hidden; }
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Important Question 😌</title>
+  <link rel="stylesheet" href="styles.css"/>
 
-    /* We will move only the NO button */
+  <!-- ✅ Only added to keep NO button inside the screen (prevents vanish) -->
+  <style>
+    .screen{ position:relative; overflow:hidden; }
+    #choiceRow{ position:relative; }
     #noBtn{
       position:absolute;
-      left: 50%;
-      top: calc(100% - 92px);
-      transform: translateX(-50%);
+      /* start near the right side of the Yes button row */
+      right: 0;
+      top: 0;
+      transform: translate(0,0);
       will-change: left, top, transform;
-      transition: left .22s ease, top .22s ease;
-      z-index: 3;
-      min-width: min(360px, 90%);
-    }
-
-    /* Keep YES in normal flow */
-    #yesBtn{
-      min-width: min(360px, 90%);
-      z-index: 2;
+      transition: left .22s ease, top .22s ease, transform .22s ease;
     }
   </style>
 </head>
 
-<body class="theme-propose fade-in">
+<body class="theme-valentine fade-in">
   <div class="bg" aria-hidden="true">
-    <div class="glow g1"></div>
-    <div class="glow g2"></div>
-    <div class="glow g3"></div>
+    <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
   </div>
-
   <div class="hearts" aria-hidden="true"></div>
 
   <main class="stage">
     <section class="screen" id="screen">
       <div class="topline">
-        <div class="tag">Quick question…</div>
-        <div class="daycount">💘</div>
+        <div class="tag">Incoming Question</div>
+        <div class="daycount">Question Time</div>
       </div>
 
-      <!-- Keep your exact text here (edit as you like) -->
-      <h1 class="headline">Will you be my Valentine? 👀</h1>
-      <p class="line">Choose wisely.</p>
-      <p class="hint">(Yes is the correct answer)</p>
+      <h1 class="headline">Hey <span id="name">Akshya aka kuchupuchu</span> ❤️</h1>
+      <div class="subtitle">Don’t panic 😭</div>
 
-      <div class="actions" id="actions">
-        <button class="btn" id="yesBtn" type="button">Yes 💖</button>
-        <button class="btn ghost" id="noBtn" type="button">No 😤</button>
+      <img class="bear" src="assets/bears/ask.webp" alt="cute bear" />
+
+      <p class="line" id="line">Okay… before we start the Valentine Week 😌</p>
+      <p class="hint" id="hint">(Tap Continue Boss)</p>
+
+      <div class="actions" id="continueRow">
+        <button class="btn" id="continueBtn" type="button">Continue</button>
       </div>
+
+      <div class="actions" id="choiceRow" style="display:none;">
+        <button class="btn" id="yesBtn" type="button">Yes 😌❤️</button>
+        <button class="btn ghost" id="noBtn" type="button">No 🙄</button>
+      </div>
+
+      <p class="hint" id="noHint" style="display:none; margin-top:14px;">
+        (Choose wisely. I’m sensitive. 🙂)
+      </p>
     </section>
   </main>
 
   <script>
-    // ====== page flow ======
-    const YES_URL = "rose.html"; // change if your next page is different
+    const herName = "Akshya"; // change name here too
+    document.getElementById("name").textContent = herName;
 
-    document.getElementById("yesBtn").addEventListener("click", () => {
-      document.body.classList.add("fade-out");
-      setTimeout(() => { location.href = YES_URL; }, 260);
+    const askLines = [
+      "Okay… before we start Valentine Week 😌",
+      "I have one very serious question.",
+      "Like… government-level serious.",
+      "Will you be my Valentine? ❤️"
+    ];
+
+    const lineEl = document.getElementById("line");
+    const hintEl = document.getElementById("hint");
+    const contBtn = document.getElementById("continueBtn");
+    const continueRow = document.getElementById("continueRow");
+    const choiceRow = document.getElementById("choiceRow");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const noHint = document.getElementById("noHint");
+    const screen = document.getElementById("screen");
+
+    let idx = 0;
+    let navigating = false;
+
+    function setLine(t){
+      lineEl.style.opacity = "0";
+      lineEl.style.transform = "translateY(8px)";
+      setTimeout(() => {
+        lineEl.textContent = t;
+        lineEl.style.transition = "opacity .28s ease, transform .28s ease";
+        lineEl.style.opacity = "1";
+        lineEl.style.transform = "translateY(0)";
+      }, 120);
+    }
+
+    contBtn.addEventListener("click", () => {
+      idx++;
+      if (idx < askLines.length) setLine(askLines[idx]);
+
+      if (idx === askLines.length - 1) {
+        continueRow.style.display = "none";
+        hintEl.style.display = "none";
+        choiceRow.style.display = "flex";
+        noHint.style.display = "block";
+
+        // ✅ Ensure NO starts visible and inside bounds when choiceRow appears
+        initNoButton();
+      }
     });
 
-    // ====== runaway NO button ======
-    const noBtn = document.getElementById("noBtn");
-    const screen = document.getElementById("screen");
+    // ✅ funny NO behavior (farther + never vanishes)
+    let noCount = 0;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
-    function moveNoFar(){
+    function initNoButton(){
+      // Put NO button on the right of the row (absolute)
+      noBtn.style.left = "";
+      noBtn.style.top = "";
+      noBtn.style.right = "0px";
+      noBtn.style.transform = "translate(0,0)";
+    }
+
+    function moveNoButton(){
+      // Move inside the card area, far away, and never outside
       const r = screen.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
-      // padding from edges so it never clips
-      const pad = 16;
-
-      // "Run farther": allow full area of the card
-      const maxX = r.width  - b.width  - pad;
+      const pad = 18; // spacing from edges
+      const minX = pad;
+      const maxX = r.width - b.width - pad;
+      const minY = pad + 70; // avoid the very top header area
       const maxY = r.height - b.height - pad;
 
-      // pick a random spot (far enough from center)
-      let x = pad + Math.random() * maxX;
-      let y = pad + Math.random() * maxY;
+      let x = minX + Math.random() * (maxX - minX);
+      let y = minY + Math.random() * (maxY - minY);
 
-      // Avoid placing exactly under the Yes button area (top center)
-      // (not perfect, but helps)
-      const avoidTop = r.height * 0.28;
-      if (y < avoidTop) y = avoidTop + Math.random() * (maxY - avoidTop);
+      x = clamp(x, minX, maxX);
+      y = clamp(y, minY, maxY);
 
-      // clamp final
-      x = clamp(x, pad, r.width  - b.width  - pad);
-      y = clamp(y, pad, r.height - b.height - pad);
-
+      // switch from "right" anchoring to exact positioning
+      noBtn.style.right = "auto";
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
-      noBtn.style.transform = "translateX(0)";
+      noBtn.style.transform = "translate(0,0)";
     }
 
-    // Desktop triggers
-    noBtn.addEventListener("mouseenter", moveNoFar);
-    noBtn.addEventListener("mousemove", moveNoFar);
-
-    // Mobile trigger
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      moveNoFar();
-    }, { passive:false });
-
-    // Initial position: bottom center
-    function initNo(){
-      const r = screen.getBoundingClientRect();
-      noBtn.style.left = (r.width / 2) + "px";
-      noBtn.style.top  = (r.height - 92) + "px";
-      noBtn.style.transform = "translateX(-50%)";
-    }
-    window.addEventListener("resize", initNo);
-    initNo();
-
-    // Optional: if she tries to click it, keep running 😈
-    noBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      moveNoFar();
+    // Runs away on hover too (prevents “vanish on hover” issue)
+    noBtn.addEventListener("mouseenter", () => {
+      if (noBtn.disabled) return;
+      moveNoButton();
     });
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+      moveNoButton();
+
+      const jokes = [
+        "No? 😭 okay wait… try again.",
+        "Button said: ‘nah’ and ran away 🏃‍♂️💨",
+        "Bro that’s illegal. Click Yes.",
+        "Okay fine… but I’m still cute so…",
+        "At this point the No button is just cardio."
+      ];
+      noHint.textContent = jokes[Math.min(noCount - 1, jokes.length - 1)];
+
+      if (noCount >= 5) {
+        noHint.textContent = "Okay. I removed the No option emotionally. 🙂❤️";
+        noBtn.disabled = true;
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      if (navigating) return;
+      navigating = true;
+      document.body.classList.add("fade-out");
+      setTimeout(() => location.href = "rose.html", 260);
+    });
+
+    // hearts (same vibe)
+    const heartsLayer = document.querySelector(".hearts");
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = `${Math.random() * 100}vw`;
+
+      const size = 10 + Math.random() * 16;
+      h.style.width = `${size}px`;
+      h.style.height = `${size}px`;
+
+      const styles = getComputedStyle(document.body);
+      const c1 = styles.getPropertyValue("--accent").trim() || "#ff4d7d";
+      const c2 = styles.getPropertyValue("--accent2").trim() || "#ff7aa6";
+      const colors = [c1, c2, "#ffd1df", "#ffffff"];
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+      const duration = 6 + Math.random() * 6;
+      h.style.animationDuration = `${duration}s`;
+      h.style.opacity = (0.22 + Math.random() * 0.55).toFixed(2);
+
+      heartsLayer.appendChild(h);
+      setTimeout(() => h.remove(), duration * 1000);
+    }
+    setInterval(spawnHeart, 420);
   </script>
+
+  <audio id="bgm" preload="auto" loop>
+    <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="music.js"></script>
+
 </body>
 </html>
