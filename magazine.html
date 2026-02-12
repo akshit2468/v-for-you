@@ -144,22 +144,22 @@
       z-index:1;
     }
 
-    /* ✅ Pages */
     .page{
       width:100%;
       height:100%;
-      background: #0b070a; /* looks premium behind images */
+      background: #f7f1f4;         /* ✅ paper instead of black */
       overflow:hidden;
+      display:flex;
     }
-
-    /* ✅ MAIN FIX: no cropping */
+  
     .page img{
       width:100%;
       height:100%;
       display:block;
-      object-fit: contain;  /* <-- NO CUTTING */
-      background: #0b070a;
+      object-fit: contain;          /* ✅ no cropping */
+      background: #f7f1f4;          /* ✅ match page */
     }
+    
 
     .footer{
       width:min(1100px, 96vw);
