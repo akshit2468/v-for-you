@@ -202,6 +202,36 @@
 
     .fade-in{ animation: in .35s ease both; }
     @keyframes in{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+
+    /* ====== FORCE pages to look stuck together (kill seams/shadows) ====== */
+
+    /* remove all generated shadows that look like gaps */
+    .stf__outerShadow,
+    .stf__innerShadow,
+    .stf__hardShadow,
+    .stf__shadow {
+      display: none !important;
+      opacity: 0 !important;
+    }
+    /* remove any padding/margins the engine adds */
+    .stf__item,
+    .stf__wrapper,
+    .stf__block {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+    /* make the "page" itself not draw borders/edges */
+    .page {
+      box-shadow: none !important;
+      border: 0 !important;
+    }
+    /* reduce anti-alias seam line (common on mobile) */
+    .stf__item {
+      transform: translateZ(0) !important;
+      backface-visibility: hidden !important;
+      -webkit-backface-visibility: hidden !important;
+    }
   </style>
 </head>
 
