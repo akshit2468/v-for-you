@@ -1,88 +1,131 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>For You ❤️</title>
-<link rel="stylesheet" href="styles.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>For You ❤️</title>
+  <link rel="stylesheet" href="styles.css"/>
 
-<style>
-.video-wrap{
-  position:relative;
-  width:min(520px,92vw);
-  margin:20px auto 0;
-}
+  <style>
+    /* Keep same card look, but optimize space for video */
+    .screen{
+      padding-bottom: 26px;
+    }
 
-.video{
-  width:100%;
-  border-radius:22px;
-  display:block;
-  background:#000;
-  box-shadow:0 25px 70px rgba(0,0,0,.45);
-}
+    .video-wrap{
+      width: min(820px, 92vw);
+      margin: 18px auto 0;
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 25px 70px rgba(0,0,0,.45);
+    }
 
-.msg{
-  margin-top:18px;
-  font-size:clamp(18px,3vw,24px);
-  line-height:1.5;
-  max-width:38ch;
-  margin-left:auto;
-  margin-right:auto;
-}
-</style>
+    /* Responsive video that never overflows */
+    .video{
+      width: 100%;
+      height: auto;
+      max-height: min(58vh, 520px);
+      display: block;
+      background: #000;
+      object-fit: contain; /* no cropping */
+    }
+
+    .msg{
+      margin: 16px auto 0;
+      max-width: 46ch;
+      font-size: clamp(16px, 3vw, 20px);
+      line-height: 1.6;
+      color: rgba(255,242,247,.92);
+    }
+
+    /* Button only appears at the end */
+    .actions.end-only{
+      display: none;
+      margin-top: 18px;
+    }
+
+    /* Small helper text */
+    .tiny{
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: .75;
+    }
+  </style>
 </head>
 
 <body class="theme-valentine fade-in">
+  <div class="bg" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
 
-<div class="bg" aria-hidden="true">
-  <div class="glow g1"></div>
-  <div class="glow g2"></div>
-  <div class="glow g3"></div>
-</div>
-<div class="hearts" aria-hidden="true"></div>
+  <div class="hearts" aria-hidden="true"></div>
 
-<main class="stage">
-  <section class="screen">
+  <main class="stage">
+    <section class="screen">
 
-    <div class="topline">
-      <div class="tag">Before the surprise…</div>
-      <div class="daycount">❤️</div>
-    </div>
+      <div class="topline">
+        <div class="tag">One last thing…</div>
+        <div class="daycount">🎥</div>
+      </div>
 
-    <h1 class="headline">Just one more thing</h1>
+      <!-- Keep your text however you want -->
+      <h1 class="headline">Watch this 💗</h1>
 
-    <div class="video-wrap">
-      <video id="msgVideo" class="video" autoplay muted playsinline controls>
-        <source src="assets/me/message.mp4" type="video/mp4">
-      </video>
-    </div>
+      <div class="video-wrap">
+        <video id="msgVideo" class="video" controls playsinline preload="metadata">
+          <source src="assets/me/message.mp4" type="video/mp4">
+        </video>
+      </div>
 
-    <p class="msg">
-      I wanted you to see this first.
-    </p>
+      <p class="msg" id="afterMsg">
+        I made this for you.
+      </p>
 
-    <div class="actions">
-      <button class="btn" id="nextBtn">Open your surprise →</button>
-    </div>
+      <p class="tiny" id="tinyHint">Finish the video to unlock the next part 👀</p>
 
-  </section>
-</main>
+      <div class="actions end-only" id="endActions">
+        <button class="btn" id="nextBtn" type="button">Open your surprise →</button>
+      </div>
 
-<script>
-const btn = document.getElementById("nextBtn");
+    </section>
+  </main>
 
-btn.addEventListener("click", () => {
-  document.body.classList.add("fade-out");
-  setTimeout(() => location.href = "magazine.html", 280);
-});
+  <script>
+    const vid = document.getElementById("msgVideo");
+    const endActions = document.getElementById("endActions");
+    const nextBtn = document.getElementById("nextBtn");
+    const tinyHint = document.getElementById("tinyHint");
 
-// auto-redirect after video ends
-const vid = document.getElementById("msgVideo");
-vid.addEventListener("ended", () => {
-  document.body.classList.add("fade-out");
-  setTimeout(() => location.href = "magazine.html", 400);
-});
-</script>
+    function showButton(){
+      endActions.style.display = "flex";
+      tinyHint.style.display = "none";
+    }
+
+    // show button only when the video ends
+    vid.addEventListener("ended", showButton);
+
+    // optional: if she skips to near end and pauses, still show it
+    vid.addEventListener("timeupdate", () => {
+      if (vid.duration && (vid.currentTime >= vid.duration - 0.3)) {
+        showButton();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      document.body.classList.add("fade-out");
+      setTimeout(() => location.href = "magazine.html", 280);
+    });
+  </script>
+
+  <!-- Background music (continues from vibe) -->
+  <audio id="bgm" preload="auto" loop>
+    <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
+  </audio>
+  <script src="music.js"></script>
 
 </body>
 </html>
