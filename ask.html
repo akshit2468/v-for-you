@@ -5,20 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Important Question 😌</title>
   <link rel="stylesheet" href="styles.css"/>
-
-  <!-- ✅ Only added to keep NO button inside the screen (prevents vanish) -->
   <style>
+    /* Keep within the card */
     .screen{ position:relative; overflow:hidden; }
+
+    /* We move the NO button using translate, so keep it in normal layout */
     #choiceRow{ position:relative; }
-    #noBtn{
-      position:absolute;
-      /* start near the right side of the Yes button row */
-      right: 0;
-      top: 0;
-      transform: translate(0,0);
-      will-change: left, top, transform;
-      transition: left .22s ease, top .22s ease, transform .22s ease;
-    }
+    #noBtn{ will-change: transform; }
   </style>
 </head>
 
@@ -102,54 +95,65 @@
         hintEl.style.display = "none";
         choiceRow.style.display = "flex";
         noHint.style.display = "block";
-
-        // ✅ Ensure NO starts visible and inside bounds when choiceRow appears
-        initNoButton();
+        resetNo();
       }
     });
 
-    // ✅ funny NO behavior (farther + never vanishes)
+    // ✅ Funny NO behavior: move a bit farther on CLICK only, but never out of screen.
     let noCount = 0;
+    let noX = 0, noY = 0;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
-    function initNoButton(){
-      // Put NO button on the right of the row (absolute)
-      noBtn.style.left = "";
-      noBtn.style.top = "";
-      noBtn.style.right = "0px";
-      noBtn.style.transform = "translate(0,0)";
+    function boundsForNo(){
+      // Keep translation within the screen so it never disappears
+      const r = screen.getBoundingClientRect();
+      const row = choiceRow.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+
+      // How much space available around the row (relative to the row's top-left)
+      // We'll allow it to wiggle within the row + a little extra, but still inside screen.
+      const pad = 16;
+
+      // row's position inside screen
+      const rowLeft = row.left - r.left;
+      const rowTop  = row.top  - r.top;
+
+      // current button position inside screen
+      const btnLeft = b.left - r.left;
+      const btnTop  = b.top  - r.top;
+
+      // Allowed translate ranges so the button stays fully inside screen
+      const minTx = (pad) - btnLeft;
+      const maxTx = (r.width - pad - b.width) - btnLeft;
+
+      const minTy = (pad) - btnTop;
+      const maxTy = (r.height - pad - b.height) - btnTop;
+
+      return { minTx, maxTx, minTy, maxTy, rowLeft, rowTop };
+    }
+
+    function resetNo(){
+      noX = 0; noY = 0;
+      noBtn.style.transform = "translate(0px, 0px)";
     }
 
     function moveNoButton(){
-      // Move inside the card area, far away, and never outside
-      const r = screen.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
+      const { minTx, maxTx, minTy, maxTy } = boundsForNo();
 
-      const pad = 18; // spacing from edges
-      const minX = pad;
-      const maxX = r.width - b.width - pad;
-      const minY = pad + 70; // avoid the very top header area
-      const maxY = r.height - b.height - pad;
+      // Bigger than your old values, but still reasonable
+      const stepX = 120;  // was ~40
+      const stepY = 60;   // was ~15
 
-      let x = minX + Math.random() * (maxX - minX);
-      let y = minY + Math.random() * (maxY - minY);
+      // Add a random delta (not teleport across screen)
+      const dx = (Math.random() * stepX * 2) - stepX;
+      const dy = (Math.random() * stepY * 2) - stepY;
 
-      x = clamp(x, minX, maxX);
-      y = clamp(y, minY, maxY);
+      noX = clamp(noX + dx, minTx, maxTx);
+      noY = clamp(noY + dy, minTy, maxTy);
 
-      // switch from "right" anchoring to exact positioning
-      noBtn.style.right = "auto";
-      noBtn.style.left = x + "px";
-      noBtn.style.top  = y + "px";
-      noBtn.style.transform = "translate(0,0)";
+      noBtn.style.transform = `translate(${noX}px, ${noY}px)`;
     }
-
-    // Runs away on hover too (prevents “vanish on hover” issue)
-    noBtn.addEventListener("mouseenter", () => {
-      if (noBtn.disabled) return;
-      moveNoButton();
-    });
 
     noBtn.addEventListener("click", () => {
       noCount++;
