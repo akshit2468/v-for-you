@@ -10,14 +10,19 @@ function getLines() {
 const lines = getLines();
 let i = -1;
 
+// ✅ Only set name if the element is empty (so your custom text stays!)
 const nameEl = document.getElementById("name");
-if (nameEl) nameEl.textContent = herName;
+if (nameEl) {
+  const current = (nameEl.textContent || "").trim();
+  if (current === "") nameEl.textContent = herName;
+}
 
 const lineEl = document.getElementById("line");
 const hintEl = document.getElementById("hint");
 const nextBtn = document.getElementById("nextBtn");
 
 function setLine(text) {
+  if (!lineEl) return;
   lineEl.style.opacity = "0";
   lineEl.style.transform = "translateY(8px)";
   setTimeout(() => {
@@ -44,7 +49,8 @@ function next(){
     const nextUrl = document.body.getAttribute("data-next");
     const customLabel = document.body.getAttribute("data-next-label");
 
-    if (i === lines.length - 1 && nextUrl){
+    // ✅ Only change button label if we actually have the button
+    if (nextBtn && i === lines.length - 1 && nextUrl){
       nextBtn.textContent = customLabel || "Next day →";
     }
     return;
