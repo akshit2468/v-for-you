@@ -12,6 +12,8 @@
     :root{
       --bgA:#07040a;
       --bgB:#1a0612;
+      --accent:#ff3d6e;
+      --accent2:#ff86b2;
       --shadow: 0 30px 90px rgba(0,0,0,.55);
       --radius:22px;
     }
@@ -26,11 +28,36 @@
       overflow:hidden;
     }
 
-    /* background particles */
+    /* particles canvas */
     #particles{
-      position:fixed; inset:0; z-index:0;
+      position:fixed;
+      inset:0;
+      z-index:0;
       pointer-events:none;
       opacity:.95;
+    }
+
+    /* glow blobs */
+    .glows{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute;
+      filter: blur(90px);
+      opacity:.40;
+      animation: floatGlow 10s ease-in-out infinite alternate;
+      transform: translate3d(0,0,0);
+    }
+    .g1{ width:620px;height:620px; left:-180px; top:-220px; background: rgba(255,61,110,.55); }
+    .g2{ width:680px;height:680px; right:-220px; top:40px;  background: rgba(255,134,178,.45); animation-duration: 12s; }
+    .g3{ width:820px;height:820px; left:18%; bottom:-360px; background: rgba(255,61,110,.35); animation-duration: 14s; }
+    @keyframes floatGlow{
+      from{ transform: translateY(0) translateX(0) scale(1); }
+      to{ transform: translateY(18px) translateX(10px) scale(1.03); }
     }
 
     .wrap{
@@ -75,10 +102,10 @@
       text-align:center;
     }
 
-    /* ✅ Restore a safer shell size */
+    /* ✅ shell size tuned to not clip */
     .book-shell{
       width:min(1100px, 96vw);
-      height:min(700px, 78vh);
+      height:min(680px, 74vh);
       border-radius: var(--radius);
       position:relative;
       box-shadow: var(--shadow);
@@ -86,6 +113,25 @@
       border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
       isolation:isolate;
+    }
+
+    .book-shell::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: calc(var(--radius) + 2px);
+      background:
+        radial-gradient(700px 300px at 20% 0%, rgba(255,61,110,.25), transparent 60%),
+        radial-gradient(700px 320px at 85% 30%, rgba(255,134,178,.18), transparent 62%),
+        linear-gradient(90deg, rgba(255,61,110,.12), rgba(255,134,178,.10));
+      filter: blur(12px);
+      opacity:.9;
+      z-index:-1;
+      animation: glowPulse 3.8s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse{
+      from{ opacity:.65; transform: scale(1); }
+      to{ opacity:1; transform: scale(1.01); }
     }
 
     #book{
@@ -98,44 +144,33 @@
       z-index:1;
     }
 
+    /* ✅ Pages */
     .page{
       width:100%;
       height:100%;
-      background:#000; /* looks like real page border when image doesn't fill */
+      background: #0b070a; /* looks premium behind images */
       overflow:hidden;
     }
 
-    /* ✅ THIS is the main fix: no cropping */
+    /* ✅ MAIN FIX: no cropping */
     .page img{
       width:100%;
       height:100%;
       display:block;
-      object-fit: contain; /* IMPORTANT: shows full page */
-      background:#000;
+      object-fit: contain;  /* <-- NO CUTTING */
+      background: #0b070a;
     }
 
-    .footer-note{
+    .footer{
       width:min(1100px, 96vw);
       display:flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      text-align:center;
-      font-size:12px;
-      opacity:.78;
+      opacity:.85;
       user-select:none;
     }
-    .pill{
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(10px);
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-size:11px;
-    }
+
     .navbtn{
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.08);
@@ -150,8 +185,20 @@
       place-items:center;
       transition: transform .12s ease, filter .12s ease;
     }
-    .navbtn:hover{ filter: brightness(1.05); }
+    .navbtn:hover{ filter: brightness(1.06); }
     .navbtn:active{ transform: scale(.98); }
+
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:11px;
+    }
 
     .fade-in{ animation: in .35s ease both; }
     @keyframes in{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
@@ -161,6 +208,12 @@
 <body class="fade-in">
   <canvas id="particles"></canvas>
 
+  <div class="glows" aria-hidden="true">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
   <div class="wrap">
     <div class="topbar">
       <a href="valentine.html">← back</a>
@@ -168,14 +221,14 @@
         <div class="title">Mini Magazine</div>
         <div class="hint">drag corner • swipe • arrows</div>
       </div>
-      <div style="opacity:.85;font-weight:900">💞</div>
+      <div style="opacity:.9;font-weight:900">💞</div>
     </div>
 
     <div class="book-shell">
       <div id="book"></div>
     </div>
 
-    <div class="footer-note">
+    <div class="footer">
       <button class="navbtn" id="prevBtn" type="button">←</button>
       <div class="pill" id="pagePill">Cover</div>
       <button class="navbtn" id="nextBtn" type="button">→</button>
@@ -183,6 +236,7 @@
   </div>
 
   <script>
+    // ✅ Your images setup
     const MAG_DIR = "assets/magazine/";
     const IMG_EXT = "jpeg";
     const PAGE_COUNT = 10;
@@ -200,7 +254,7 @@
 
     const pages = [];
     pages.push(makePage(coverFront, "Cover"));
-    for (let i=1;i<=PAGE_COUNT;i++){
+    for (let i = 1; i <= PAGE_COUNT; i++){
       pages.push(makePage(innerSrc(i), `Page ${i}`));
     }
     pages.push(makePage(coverBack, "Back cover"));
@@ -218,14 +272,14 @@
       minWidth: 320,
       maxWidth: 1100,
       minHeight: 420,
-      maxHeight: 760,
+      maxHeight: 720,
 
       showCover: true,
       useMouseEvents: true,
       mobileScrollSupport: false,
 
-      flippingTime: 1100,
-      maxShadowOpacity: 0.25,
+      flippingTime: 1150,
+      maxShadowOpacity: 0.22,
       drawShadow: true,
 
       disableFlipByClick: false,
@@ -235,11 +289,12 @@
     pageFlip.loadFromHTML(pages);
     pageFlip.turnToPage(0);
 
-    // click cover -> open
+    // Click cover -> open (go to first inner page)
     container.addEventListener("click", () => {
       if (pageFlip.getCurrentPageIndex() === 0) pageFlip.flipNext();
     });
 
+    // Nav + label
     const pill = document.getElementById("pagePill");
     document.getElementById("prevBtn").addEventListener("click", () => pageFlip.flipPrev());
     document.getElementById("nextBtn").addEventListener("click", () => pageFlip.flipNext());
@@ -253,6 +308,62 @@
     }
     updatePill();
     pageFlip.on("flip", updatePill);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") pageFlip.flipNext();
+      if (e.key === "ArrowLeft") pageFlip.flipPrev();
+      if (e.key === "Escape") window.location.href = "valentine.html";
+    });
+
+    // Particles
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let W=0,H=0,DPR=1;
+
+    function resize(){
+      DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    const rand = (a,b)=>a+Math.random()*(b-a);
+    const particles = Array.from({length: 70}, () => ({
+      x: rand(0,W), y: rand(0,H),
+      r: rand(0.9, 2.8)*DPR,
+      vx: rand(-0.18, 0.18)*DPR,
+      vy: rand(-0.30, -0.08)*DPR,
+      a: rand(0.10, 0.30),
+      hue: Math.random() < 0.6 ? 340 : 320
+    }));
+
+    function step(){
+      ctx.clearRect(0,0,W,H);
+      for (const p of particles){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.x += Math.sin((p.y / 220) + performance.now()/1800) * 0.06 * DPR;
+
+        if (p.y < -30*DPR) { p.y = H + rand(0,120*DPR); p.x = rand(0,W); }
+        if (p.x < -40*DPR) p.x = W + 40*DPR;
+        if (p.x > W + 40*DPR) p.x = -40*DPR;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 95%, 70%, ${p.a})`;
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+    step();
   </script>
+
+  <audio id="bgm" preload="auto" loop>
+    <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
+  </audio>
+  <script src="music.js"></script>
 </body>
 </html>
