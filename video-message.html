@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>For You ❤️</title>
+<link rel="stylesheet" href="styles.css"/>
+
+<style>
+.video-wrap{
+  position:relative;
+  width:min(520px,92vw);
+  margin:20px auto 0;
+}
+
+.video{
+  width:100%;
+  border-radius:22px;
+  display:block;
+  background:#000;
+  box-shadow:0 25px 70px rgba(0,0,0,.45);
+}
+
+.msg{
+  margin-top:18px;
+  font-size:clamp(18px,3vw,24px);
+  line-height:1.5;
+  max-width:38ch;
+  margin-left:auto;
+  margin-right:auto;
+}
+</style>
+</head>
+
+<body class="theme-valentine fade-in">
+
+<div class="bg" aria-hidden="true">
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="glow g3"></div>
+</div>
+<div class="hearts" aria-hidden="true"></div>
+
+<main class="stage">
+  <section class="screen">
+
+    <div class="topline">
+      <div class="tag">Before the surprise…</div>
+      <div class="daycount">❤️</div>
+    </div>
+
+    <h1 class="headline">Just one more thing</h1>
+
+    <div class="video-wrap">
+      <video id="msgVideo" class="video" autoplay muted playsinline controls>
+        <source src="assets/me/message.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <p class="msg">
+      I wanted you to see this first.
+    </p>
+
+    <div class="actions">
+      <button class="btn" id="nextBtn">Open your surprise →</button>
+    </div>
+
+  </section>
+</main>
+
+<script>
+const btn = document.getElementById("nextBtn");
+
+btn.addEventListener("click", () => {
+  document.body.classList.add("fade-out");
+  setTimeout(() => location.href = "magazine.html", 280);
+});
+
+// auto-redirect after video ends
+const vid = document.getElementById("msgVideo");
+vid.addEventListener("ended", () => {
+  document.body.classList.add("fade-out");
+  setTimeout(() => location.href = "magazine.html", 400);
+});
+</script>
+
+<audio id="bgm" preload="auto" loop>
+  <source src="/v-for-you/assets/music.mp3" type="audio/mpeg">
+</audio>
+<script src="music.js"></script>
+
+</body>
+</html>
